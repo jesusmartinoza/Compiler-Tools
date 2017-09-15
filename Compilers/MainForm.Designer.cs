@@ -229,6 +229,7 @@
             this.textBoxRegexLog.Location = new System.Drawing.Point(6, 19);
             this.textBoxRegexLog.Multiline = true;
             this.textBoxRegexLog.Name = "textBoxRegexLog";
+            this.textBoxRegexLog.ReadOnly = true;
             this.textBoxRegexLog.Size = new System.Drawing.Size(634, 208);
             this.textBoxRegexLog.TabIndex = 1;
             // 

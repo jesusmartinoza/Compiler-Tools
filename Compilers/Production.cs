@@ -8,18 +8,27 @@ namespace Compilers
 {
     class Production
     {
+        string name;
         List<Symbol> alpha;
         List<List<Symbol>> symbols;
 
-        public Production(List<Symbol> alpha, List<Symbol> symbols)
+        internal string Name { get => name; set => name = value; }
+        internal List<Symbol> Alpha { get => alpha; set => alpha = value; }
+        internal List<List<Symbol>> Symbols { get => symbols; set => symbols = value; }
+
+        public Production(string name, List<Symbol> alpha, List<Symbol> symbols)
         {
-            this.Alpha = alpha;
+            this.name = name;
+            this.alpha = alpha;
             this.symbols = new List<List<Symbol>>();
             this.symbols.Add(symbols);
         }
 
         /**
          * Print Production in human way.
+         * For example.
+         * 
+         * S -> aA | aB | C
          * */
         public override string ToString()
         {
@@ -39,14 +48,11 @@ namespace Compilers
                 }
 
                 // Avoid print "or" symbol in last list
-                if (i-- != 0)
+                if (i-- > 1)
                     str += " | ";
             }
 
             return str;
         }
-
-        internal List<List<Symbol>> Symbols { get => symbols; set => symbols = value; }
-        internal List<Symbol> Alpha { get => alpha; set => alpha = value; }
     }
 }

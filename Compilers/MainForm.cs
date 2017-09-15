@@ -45,9 +45,9 @@ namespace Compilers
 
                     if(name.Contains("ε"))
                     {
-                        MessageBox.Show("Se ha detectado un epsilon del lado izquierdo de la producción... "
+                        MessageBox.Show("An epsilon has been detected on the left side of the production... "
                             + str
-                            + ". \nSe ha eliminado de la gramatica para evitar comportamiento extraño." );
+                            + ". \nIt has been removed from grammar to avoid strange behavior." );
                     } else {
                         string symbolsStr = str.Substring(str.LastIndexOf("-") + 2).Trim(); // find first '-' and get string after 2 char
                         string[] tokens = symbolsStr.Split('|');
@@ -56,12 +56,13 @@ namespace Compilers
                         foreach (var t in tokens)
                         {
                             List<Symbol> symbols = ObtainSymbols(t);
-                            grammar.AddProduction(new Production(alpha, symbols));
+                            grammar.AddProduction(new Production(name, alpha, symbols));
                         }
                     }
                 }
             }
 
+            grammar.CalculateFormalType();
             // Update GroupBox Result
             labelTerminal.Text = grammar.GetTerminals();
             labelNonTerminal.Text = grammar.GetNonTerminals();
@@ -80,28 +81,42 @@ namespace Compilers
             symbolsStr.Trim();
             foreach (var c in symbolsStr)
                 symbols.Add(new Symbol(c.ToString()));
-
-            //Regex r = new Regex(@"'\w*'");
-            //MatchCollection mc = r.Matches(symbolsStr);
-            //var otherSymbols = Regex.Split(symbolsStr, @"<(.+?)>");
-
-            // First add all symbols between < >
-            //foreach (Match m in mc)
-            //{
-            //    symbols.Add(new Symbol(m.Value));
-            //}
             
             return symbols;
         }
 
+        /**
+         * Insert epsilon symbol on textBox grammar
+         * */
         private void InsertarEpsilon_click(object sender, EventArgs e)
         {
             tbGrammar.AppendText("ε");
         }
 
+        /**
+         * Create Regex from regular grammar.
+         * First simplify grammar.
+         * Then iterate looking for productions in way Xi = αiXi | Ψ
+         * 
+         * ..... to be continued :P
+         * 
+         * */
         private void btnRegex_Click(object sender, EventArgs e)
         {
+            if (grammar.Type != Grammar.GrammarType.REGULAR)
+                MessageBox.Show("Grammar must be REGULAR type");
+            else
+            {
+                textBoxRegexLog.Text = "ORIGINAL GRAMMAR\r\n";
+                textBoxRegexLog.Text += grammar.ToString() + "\r\n";
 
+                grammar.Simplify();
+                textBoxRegexLog.Text += "STEP 1.\r\n";
+                textBoxRegexLog.Text += grammar.ToString();
+
+                textBoxRegexLog.Text += "STEP 2.\r\n";
+                textBoxRegexLog.Text += grammar.ToString();
+            }
         }
     }
 }

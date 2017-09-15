@@ -10,6 +10,8 @@ namespace Compilers
     {
         private string coef;
 
+        internal string Coef { get => coef; set => coef = value; }
+
         public Symbol(string coef)
         {
             this.coef = coef;
@@ -21,7 +23,5 @@ namespace Compilers
 
             return coef.All(char.IsLower) || Int32.TryParse(coef, out n);
         }
-
-        public string Coef { get => coef; set => coef = value; }
     }
 }
