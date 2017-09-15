@@ -28,7 +28,7 @@ namespace Compilers
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
-            materialSkinManager.ColorScheme = new ColorScheme(Primary.Orange800, Primary.Orange900, Primary.Orange500, Accent.Pink400, TextShade.WHITE);
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.Red800, Primary.Red900, Primary.Red500, Accent.Teal400, TextShade.WHITE);
         }
 
         private void OnBtnProductions_Click(object sender, EventArgs e)
@@ -97,6 +97,11 @@ namespace Compilers
         private void InsertarEpsilon_click(object sender, EventArgs e)
         {
             tbGrammar.AppendText("ε");
+        }
+
+        private void btnRegex_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -23,6 +23,9 @@ namespace Compilers
             productions.Add(p);
         }
 
+        /**
+         * Get type of the grammar as string.
+         * */
         public string GetFormalType()
         {
             string type = "No grammar constraints";
@@ -35,16 +38,21 @@ namespace Compilers
                 if (p.Alpha.Count > maxAlphaLength)
                     maxAlphaLength = p.Alpha.Count;
 
-                if (p.Symbols.Count > maxBetaLength)
-                    maxBetaLength = p.Alpha.Count;
-
-                // If it is Terminal pr nonTerminal-Terminal
-                if (regularGrammar && (p.Symbols.Count == 1 && p.Symbols.ElementAt(0).IsTerminal())
-                    || (p.Symbols.Count == 2 && !p.Symbols.ElementAt(1).IsTerminal()) )
+                // If it is Terminal or nonTerminal-Terminal
+                foreach (var list in p.Symbols)
                 {
-                    regularGrammar = true;
-                } else {
-                    regularGrammar = false;
+                    if (list.Count > maxBetaLength)
+                        maxBetaLength = list.Count;
+
+                    if (regularGrammar && (list.Count == 1 && list.ElementAt(0).IsTerminal())
+                        || (list.Count == 2 && !list.ElementAt(1).IsTerminal()))
+                    {
+                        regularGrammar = true;
+                    }
+                    else
+                    {
+                        regularGrammar = false;
+                    }
                 }
             }
 
@@ -56,9 +64,15 @@ namespace Compilers
             if (regularGrammar && maxAlphaLength == 1)
                 type = "Regular grammar";
 
+            if (productions.Count == 0)
+                type = "";
+
             return type;
         }
 
+        /**
+         * Get terminals symbols in productions
+         * */
         public string GetTerminals()
         {
             string result = "";
@@ -71,16 +85,20 @@ namespace Compilers
                         result += " " + a.Coef;
                 }
 
-                foreach (var s in p.Symbols)
+                foreach (var list in p.Symbols)
                 {
-                    if (!result.Contains(s.Coef) && s.IsTerminal())
-                        result += " " + s.Coef;
+                    foreach(Symbol s in list)
+                        if (!result.Contains(s.Coef) && s.IsTerminal())
+                            result += " " + s.Coef;
                 }
             }
 
             return result;
         }
 
+        /**
+         * Get non terminals symbols in productions
+         * */
         public string GetNonTerminals()
         {
             string result = "";
@@ -92,14 +110,20 @@ namespace Compilers
                     if (!result.Contains(a.Coef) && !a.IsTerminal())
                         result += " " + a.Coef;
                 }
-                foreach (var s in p.Symbols)
+                foreach (var list in p.Symbols)
                 {
-                    if (!result.Contains(s.Coef) && !s.IsTerminal())
-                        result += " " + s.Coef;
+                    foreach (Symbol s in list)
+                        if (!result.Contains(s.Coef) && !s.IsTerminal())
+                            result += " " + s.Coef;
                 }
             }
 
             return result;
+        }
+
+        public void Simplify()
+        {
+
         }
     }
 }

@@ -41,8 +41,19 @@
             this.labelTerminal = new System.Windows.Forms.Label();
             this.labelTitle2 = new System.Windows.Forms.Label();
             this.labelTitle1 = new System.Windows.Forms.Label();
+            this.materialTabControl1 = new MaterialSkin.Controls.MaterialTabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBoxRegexLog = new System.Windows.Forms.TextBox();
+            this.btnRegex = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialTabSelector = new MaterialSkin.Controls.MaterialTabSelector();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.gpGrammar.SuspendLayout();
             this.gpResult.SuspendLayout();
+            this.materialTabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbGrammar
@@ -59,7 +70,7 @@
             this.gpGrammar.Controls.Add(this.btnProductions);
             this.gpGrammar.Controls.Add(this.lblGrammarInfo);
             this.gpGrammar.Controls.Add(this.tbGrammar);
-            this.gpGrammar.Location = new System.Drawing.Point(12, 76);
+            this.gpGrammar.Location = new System.Drawing.Point(18, 6);
             this.gpGrammar.Name = "gpGrammar";
             this.gpGrammar.Size = new System.Drawing.Size(313, 276);
             this.gpGrammar.TabIndex = 2;
@@ -116,7 +127,7 @@
             this.gpResult.Controls.Add(this.labelTerminal);
             this.gpResult.Controls.Add(this.labelTitle2);
             this.gpResult.Controls.Add(this.labelTitle1);
-            this.gpResult.Location = new System.Drawing.Point(341, 76);
+            this.gpResult.Location = new System.Drawing.Point(347, 6);
             this.gpResult.Name = "gpResult";
             this.gpResult.Size = new System.Drawing.Size(313, 276);
             this.gpResult.TabIndex = 3;
@@ -174,14 +185,98 @@
             this.labelTitle1.TabIndex = 1;
             this.labelTitle1.Text = "Terminals";
             // 
+            // materialTabControl1
+            // 
+            this.materialTabControl1.Controls.Add(this.tabPage1);
+            this.materialTabControl1.Controls.Add(this.tabPage2);
+            this.materialTabControl1.Depth = 0;
+            this.materialTabControl1.Location = new System.Drawing.Point(-1, 101);
+            this.materialTabControl1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialTabControl1.Name = "materialTabControl1";
+            this.materialTabControl1.SelectedIndex = 0;
+            this.materialTabControl1.Size = new System.Drawing.Size(674, 321);
+            this.materialTabControl1.TabIndex = 4;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.gpResult);
+            this.tabPage1.Controls.Add(this.gpGrammar);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(666, 295);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Productions";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.groupBox1);
+            this.tabPage2.Controls.Add(this.btnRegex);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(666, 295);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Regex";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBoxRegexLog
+            // 
+            this.textBoxRegexLog.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxRegexLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxRegexLog.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.textBoxRegexLog.Location = new System.Drawing.Point(6, 19);
+            this.textBoxRegexLog.Multiline = true;
+            this.textBoxRegexLog.Name = "textBoxRegexLog";
+            this.textBoxRegexLog.Size = new System.Drawing.Size(634, 208);
+            this.textBoxRegexLog.TabIndex = 1;
+            // 
+            // btnRegex
+            // 
+            this.btnRegex.AutoSize = true;
+            this.btnRegex.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnRegex.Depth = 0;
+            this.btnRegex.Icon = null;
+            this.btnRegex.Location = new System.Drawing.Point(544, 253);
+            this.btnRegex.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnRegex.Name = "btnRegex";
+            this.btnRegex.Primary = true;
+            this.btnRegex.Size = new System.Drawing.Size(116, 36);
+            this.btnRegex.TabIndex = 0;
+            this.btnRegex.Text = "Obtain Regex";
+            this.btnRegex.UseVisualStyleBackColor = true;
+            this.btnRegex.Click += new System.EventHandler(this.btnRegex_Click);
+            // 
+            // materialTabSelector
+            // 
+            this.materialTabSelector.BaseTabControl = this.materialTabControl1;
+            this.materialTabSelector.Depth = 0;
+            this.materialTabSelector.Location = new System.Drawing.Point(0, 62);
+            this.materialTabSelector.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialTabSelector.Name = "materialTabSelector";
+            this.materialTabSelector.Size = new System.Drawing.Size(673, 37);
+            this.materialTabSelector.TabIndex = 5;
+            this.materialTabSelector.Text = "materialTabSelector1";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.textBoxRegexLog);
+            this.groupBox1.Location = new System.Drawing.Point(19, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(641, 241);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Log";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(670, 364);
-            this.Controls.Add(this.gpResult);
-            this.Controls.Add(this.gpGrammar);
+            this.ClientSize = new System.Drawing.Size(670, 397);
+            this.Controls.Add(this.materialTabSelector);
+            this.Controls.Add(this.materialTabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "Formal Grammar";
@@ -189,6 +284,12 @@
             this.gpGrammar.PerformLayout();
             this.gpResult.ResumeLayout(false);
             this.gpResult.PerformLayout();
+            this.materialTabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -207,6 +308,13 @@
         private System.Windows.Forms.Label label2;
         private MaterialSkin.Controls.MaterialRaisedButton btnProductions;
         private MaterialSkin.Controls.MaterialFlatButton btnInsterEpsilon;
+        private MaterialSkin.Controls.MaterialTabControl materialTabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private MaterialSkin.Controls.MaterialTabSelector materialTabSelector;
+        private System.Windows.Forms.TextBox textBoxRegexLog;
+        private MaterialSkin.Controls.MaterialRaisedButton btnRegex;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 
