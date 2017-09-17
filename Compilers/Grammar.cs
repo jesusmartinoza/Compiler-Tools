@@ -57,9 +57,10 @@ namespace Compilers
                     if (list.Count > maxBetaLength)
                         maxBetaLength = list.Count;
 
-                    // If it's in "a" or "aA" way
+                    // If it's in "a", "aA" or "Aa" way
                     if (regularGrammar && (list.Count == 1 && list.ElementAt(0).IsTerminal())
-                        || (list.Count == 2 && !list.ElementAt(1).IsTerminal()))
+                        || (list.Count == 2 && list.ElementAt(0).IsTerminal() && !list.ElementAt(1).IsTerminal())
+                        || (list.Count == 2 && list.ElementAt(1).IsTerminal() && !list.ElementAt(0).IsTerminal()))
                     {
                         regularGrammar = true;
                     }
@@ -194,12 +195,19 @@ namespace Compilers
                     {
                         burnedIndex.Add(j);
                         prodA.Symbols.AddRange(prodB.Symbols);
-                        simplifiedList.Add(prodA);
                     }
                 }
+
+                if (!burnedIndex.Contains(i))
+                    simplifiedList.Add(prodA);
             }
 
             productions = simplifiedList;
+        }
+        
+        public void GenerateRegex()
+        {
+
         }
 
         /**
