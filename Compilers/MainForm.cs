@@ -114,7 +114,6 @@ namespace Compilers
                 grammar.Simplify();
                 textBoxRegexLog.Text += grammar.ToString();
 
-                textBoxRegexLog.Text += "\r\nSTEP 2.\r\n";
                 grammar.GenerateRegex(textBoxRegexLog);
             }
         }

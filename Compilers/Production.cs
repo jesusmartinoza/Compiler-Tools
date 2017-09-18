@@ -9,28 +9,46 @@ namespace Compilers
     class Production
     {
         string name;
-        List<Symbol> alphaList;
-        List<List<Symbol>> betaList;
+        List<Symbol> alpha;
+        List<List<Symbol>> beta;
 
         internal string Name { get => name; set => name = value; }
-        internal List<Symbol> AlphaList { get => alphaList; set => alphaList = value; }
-        internal List<List<Symbol>> BetaList { get => betaList; set => betaList = value; }
+        internal List<Symbol> Alpha { get => alpha; set => alpha = value; }
+        internal List<List<Symbol>> Beta { get => beta; set => beta = value; }
 
-        public Production(string name, List<Symbol> alphaList, List<Symbol> betaList)
+        public Production(string name, List<Symbol> alpha, List<Symbol> beta)
         {
             this.name = name;
-            this.alphaList = alphaList;
-            this.betaList = new List<List<Symbol>>();
-            this.betaList.Add(betaList);
+            this.alpha = alpha;
+            this.beta = new List<List<Symbol>>();
+            this.beta.Add(beta);
         }
 
+        /**
+         * Search for a symbol with the same prod.name and replace it.
+         * */
         public Boolean ReplaceInBeta(Production prod)
         {
+            var selectedList = new List<Symbol>();
             var replaced = false;
 
-            foreach(var list in betaList)
+            foreach(var list in beta)
             {
+                for(var i = list.Count - 1; i >= 0 && !replaced; i--)
+                {
+                    var symbol = list[i];
+                    if (symbol.Coef.Equals(prod.name))
+                    {
+                        selectedList = list;
+                        replaced = true;
+                        list.RemoveAt(i);
+                    }
+                }
             }
+    
+            if(replaced)
+                foreach (var prodList in prod.Beta)
+                    selectedList.AddRange(prodList);
 
             return replaced;
         }
@@ -51,14 +69,14 @@ namespace Compilers
         public Boolean RemoveRecursion()
         {
             List<Symbol> beforeX  = new List<Symbol>(); // Items before X
-            List<List<Symbol>> newBetaList = new List<List<Symbol>>();
+            List<List<Symbol>> newBeta = new List<List<Symbol>>();
             var recursionFound = false;
             var listPos = 0;
 
-            // Find betaList before X
-            for(listPos = 0; listPos < betaList.Count && !recursionFound; listPos++)
+            // Find beta before X
+            for(listPos = 0; listPos < beta.Count && !recursionFound; listPos++)
             {
-                var list = betaList[listPos];
+                var list = beta[listPos];
                 for (int j = 0; j < list.Count && !recursionFound; j++)
                 {
                     var symbol = list[j];
@@ -70,8 +88,8 @@ namespace Compilers
                 }
             }
 
-            // Cover alphaList in brackets and append to every other symbol list.
-            if(beforeX.Count > 0)
+            // Cover alpha in brackets and append to every other symbol list.
+            if(recursionFound)
             {
                 var coef = "{";
                 listPos--;
@@ -81,19 +99,45 @@ namespace Compilers
 
                 coef += "}";
 
-                foreach(var list in betaList)
+                foreach(var list in beta)
                 {
-                    if (betaList.IndexOf(list) != listPos)
+                    if (beta.IndexOf(list) != listPos)
                     {
                         list.Insert(0, new Symbol(coef));
-                        newBetaList.Add(list);
+                        newBeta.Add(list);
                     }
                 }
                 
-                betaList = newBetaList;
+                beta = newBeta;
             }
 
             return recursionFound;
+        }
+
+        /**
+         * Print beta list in human way.
+         * For example.
+         * 
+         * aA | aB | C
+         * */
+        public string GetBetaAsString()
+        {
+            string str = "";
+
+            int i = beta.Count;
+            foreach (var list in beta)
+            {
+                foreach (Symbol s in list)
+                {
+                    str += s.Coef;
+                }
+
+                // Avoid print "or" symbol in last list
+                if (i-- > 1)
+                    str += " | ";
+            }
+
+            return str;
         }
 
         /**
@@ -106,23 +150,10 @@ namespace Compilers
         {
             string str = "";
 
-            foreach(Symbol a in alphaList)
+            foreach(Symbol a in alpha)
                 str += a.Coef;
 
-            str += " -> ";
-
-            int i = betaList.Count;
-            foreach (var list in betaList)
-            {
-                foreach(Symbol s in list)
-                {
-                    str += s.Coef;
-                }
-
-                // Avoid print "or" symbol in last list
-                if (i-- > 1)
-                    str += " | ";
-            }
+            str += " -> " + GetBetaAsString();
 
             return str;
         }

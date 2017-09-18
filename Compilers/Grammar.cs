@@ -20,9 +20,11 @@ namespace Compilers
 
         List<Production> productions;
         GrammarType type;
+        string regex;
 
         internal List<Production> Productions { get => productions; set => productions = value; }
         internal GrammarType Type { get => type; set => type = value; }
+        internal string Regex { get => regex; set => regex = value; }
 
         public Grammar()
         {
@@ -49,19 +51,19 @@ namespace Compilers
 
             foreach (var p in Productions)
             {
-                if (p.AlphaList.Count > maxAlphaLength)
-                    maxAlphaLength = p.AlphaList.Count;
+                if (p.Alpha.Count > maxAlphaLength)
+                    maxAlphaLength = p.Alpha.Count;
 
                 // Iterate over every list of symbols separated by a "|"
-                foreach (var list in p.BetaList)
+                foreach (var list in p.Beta)
                 {
                     if (list.Count > maxBetaLength)
                         maxBetaLength = list.Count;
 
                     // If it's in "a", "aA" or "Aa" way
-                    if (regularGrammar && (list.Count == 1 && list.ElementAt(0).IsTerminal())
+                    if (regularGrammar && (list.Count == 1 && list.ElementAt(0).IsTerminal()
                         || (list.Count == 2 && list.ElementAt(0).IsTerminal() && !list.ElementAt(1).IsTerminal())
-                        || (list.Count == 2 && list.ElementAt(1).IsTerminal() && !list.ElementAt(0).IsTerminal()))
+                        || (list.Count == 2 && list.ElementAt(1).IsTerminal() && !list.ElementAt(0).IsTerminal())))
                     {
                         regularGrammar = true;
                     }
@@ -125,13 +127,13 @@ namespace Compilers
 
             foreach (var p in Productions)
             {
-                foreach (var a in p.AlphaList)
+                foreach (var a in p.Alpha)
                 {
                     if (!result.Contains(a.Coef) && a.IsTerminal())
                         result += " " + a.Coef;
                 }
 
-                foreach (var list in p.BetaList)
+                foreach (var list in p.Beta)
                 {
                     foreach(Symbol s in list)
                         if (!result.Contains(s.Coef) && s.IsTerminal())
@@ -151,12 +153,12 @@ namespace Compilers
 
             foreach (var p in Productions)
             {
-                foreach (var a in p.AlphaList)
+                foreach (var a in p.Alpha)
                 {
                     if (!result.Contains(a.Coef) && !a.IsTerminal())
                         result += " " + a.Coef;
                 }
-                foreach (var list in p.BetaList)
+                foreach (var list in p.Beta)
                 {
                     foreach (Symbol s in list)
                         if (!result.Contains(s.Coef) && !s.IsTerminal())
@@ -195,7 +197,7 @@ namespace Compilers
                     if(prodA.Name.Equals(prodB.Name) && !burnedIndex.Contains(j))
                     {
                         burnedIndex.Add(j);
-                        prodA.BetaList.AddRange(prodB.BetaList);
+                        prodA.Beta.AddRange(prodB.Beta);
                     }
                 }
 
@@ -208,6 +210,8 @@ namespace Compilers
         
         public void GenerateRegex(TextBox textBox)
         {
+            textBox.Text += "\r\nSTEP 2.\r\n";
+
             for (int i = 0; i < Productions.Count - 1; i++)
             {
                 var prodA = Productions[i];
@@ -215,15 +219,57 @@ namespace Compilers
                 textBox.Text += "\t" + prodA.ToString();
 
                 if (prodA.RemoveRecursion())
-                    textBox.Text += "\t" + "Redux... " + prodA.ToString() + "\r\n";
+                    textBox.Text += "\tRedux... " + prodA.ToString();
+                else
+                    textBox.Text += "\tNo redux";
 
+                textBox.Text += "\r\n\r\n";
                 for (int j = i + 1; j < Productions.Count; j++)
                 {
                     var prodB = Productions[j];
-                    textBox.Text += "\t\tj = " + (j + 1) + "\r\n";
+                    textBox.Text += "\t j = " + (j + 1);
+                    textBox.Text += "\t" + prodB.ToString();
 
+                    if (prodB.ReplaceInBeta(prodA))
+                        textBox.Text += "\tReplace... " + prodB.ToString();
+                    else
+                        textBox.Text += "\tNo replace";
+
+                    textBox.Text += "\r\n";
                 }
+                textBox.Text += "\r\n";
             }
+
+            textBox.Text += "\r\nSTEP 3.\r\n";
+            for (int i = Productions.Count - 1; i >= 0; i--)
+            {
+                var prodA = Productions[i];
+                textBox.Text += "i = " + (i + 1) + "\r\n";
+                textBox.Text += "\t" + prodA.ToString();
+
+                if (prodA.RemoveRecursion())
+                    textBox.Text += "\tRedux... " + prodA.ToString();
+                else
+                    textBox.Text += "\tNo redux";
+
+                textBox.Text += "\r\n\r\n";
+                for (int j = i - 1; j >= 0; j--)
+                {
+                    var prodB = Productions[j];
+                    textBox.Text += "\t j = " + (j + 1);
+                    textBox.Text += "\t" + prodB.ToString();
+
+                    if (prodB.ReplaceInBeta(prodA))
+                        textBox.Text += "\tReplace... " + prodB.ToString();
+                    else
+                        textBox.Text += "\tNo replace";
+
+                    textBox.Text += "\r\n";
+                }
+                textBox.Text += "\r\n";
+            }
+
+            regex = productions[0].GetBetaAsString();
         }
 
         /**
