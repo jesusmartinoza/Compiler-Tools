@@ -110,12 +110,12 @@ namespace Compilers
                 textBoxRegexLog.Text = "ORIGINAL GRAMMAR\r\n";
                 textBoxRegexLog.Text += grammar.ToString() + "\r\n";
 
-                grammar.Simplify();
                 textBoxRegexLog.Text += "STEP 1.\r\n";
+                grammar.Simplify();
                 textBoxRegexLog.Text += grammar.ToString();
 
-                textBoxRegexLog.Text += "STEP 2.\r\n";
-                textBoxRegexLog.Text += grammar.ToString();
+                textBoxRegexLog.Text += "\r\nSTEP 2.\r\n";
+                grammar.GenerateRegex(textBoxRegexLog);
             }
         }
     }

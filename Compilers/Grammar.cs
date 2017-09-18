@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Compilers
 {
@@ -48,11 +49,11 @@ namespace Compilers
 
             foreach (var p in Productions)
             {
-                if (p.Alpha.Count > maxAlphaLength)
-                    maxAlphaLength = p.Alpha.Count;
+                if (p.AlphaList.Count > maxAlphaLength)
+                    maxAlphaLength = p.AlphaList.Count;
 
                 // Iterate over every list of symbols separated by a "|"
-                foreach (var list in p.Symbols)
+                foreach (var list in p.BetaList)
                 {
                     if (list.Count > maxBetaLength)
                         maxBetaLength = list.Count;
@@ -124,13 +125,13 @@ namespace Compilers
 
             foreach (var p in Productions)
             {
-                foreach (var a in p.Alpha)
+                foreach (var a in p.AlphaList)
                 {
                     if (!result.Contains(a.Coef) && a.IsTerminal())
                         result += " " + a.Coef;
                 }
 
-                foreach (var list in p.Symbols)
+                foreach (var list in p.BetaList)
                 {
                     foreach(Symbol s in list)
                         if (!result.Contains(s.Coef) && s.IsTerminal())
@@ -150,12 +151,12 @@ namespace Compilers
 
             foreach (var p in Productions)
             {
-                foreach (var a in p.Alpha)
+                foreach (var a in p.AlphaList)
                 {
                     if (!result.Contains(a.Coef) && !a.IsTerminal())
                         result += " " + a.Coef;
                 }
-                foreach (var list in p.Symbols)
+                foreach (var list in p.BetaList)
                 {
                     foreach (Symbol s in list)
                         if (!result.Contains(s.Coef) && !s.IsTerminal())
@@ -194,7 +195,7 @@ namespace Compilers
                     if(prodA.Name.Equals(prodB.Name) && !burnedIndex.Contains(j))
                     {
                         burnedIndex.Add(j);
-                        prodA.Symbols.AddRange(prodB.Symbols);
+                        prodA.BetaList.AddRange(prodB.BetaList);
                     }
                 }
 
@@ -205,9 +206,24 @@ namespace Compilers
             productions = simplifiedList;
         }
         
-        public void GenerateRegex()
+        public void GenerateRegex(TextBox textBox)
         {
+            for (int i = 0; i < Productions.Count - 1; i++)
+            {
+                var prodA = Productions[i];
+                textBox.Text += "i = " +(i + 1) + "\r\n"; 
+                textBox.Text += "\t" + prodA.ToString();
 
+                if (prodA.RemoveRecursion())
+                    textBox.Text += "\t" + "Redux... " + prodA.ToString() + "\r\n";
+
+                for (int j = i + 1; j < Productions.Count; j++)
+                {
+                    var prodB = Productions[j];
+                    textBox.Text += "\t\tj = " + (j + 1) + "\r\n";
+
+                }
+            }
         }
 
         /**
