@@ -45,10 +45,29 @@ namespace Compilers
                     }
                 }
             }
-    
+
             if(replaced)
+            {
+                var added = false;
+                var index = beta.IndexOf(selectedList);
+
+                // If prod has more than one item just add the first one to the 
+                // selected list and the rest to main beta :)
                 foreach (var prodList in prod.Beta)
-                    selectedList.AddRange(prodList);
+                {
+                    prodList.InsertRange(0, selectedList);
+
+                    if (!added)
+                    {
+                        beta[index] = prodList;
+                        added = true;
+                    }
+                    else
+                    {
+                        beta.Insert(index + 1, prodList);
+                    }
+                }
+            }
 
             return replaced;
         }
