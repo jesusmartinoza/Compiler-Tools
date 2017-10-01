@@ -115,6 +115,16 @@ namespace Compilers
                 textBoxRegexLog.Text += grammar.ToString();
 
                 grammar.GenerateRegex(textBoxRegexLog);
+
+                textBoxRegexLog.Text += "\r\n\r\n*************************\r\n";
+                textBoxRegexLog.Text += "EXAM START HERE\r\n";
+                textBoxRegexLog.Text += "*************************\r\n";
+                textBoxRegexLog.Text += "Expresion aumentada\r\n";
+                grammar.Expand();
+                textBoxRegexLog.Text += grammar.Regex;
+
+                textBoxRegexLog.Text += "\r\n\r\nConvert to postfix\r\n";
+                textBoxRegexLog.Text += grammar.ConvertToPostfix();
             }
         }
     }

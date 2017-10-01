@@ -51,8 +51,8 @@ namespace Compilers
                 var added = false;
                 var index = beta.IndexOf(selectedList);
 
-                // If prod has more than one item just add the first one to the 
-                // selected list and the rest to main beta :)
+                // If prod has more than one item replace the first one in the 
+                // selected list and the rest add to main beta :)
                 foreach (var prodList in prod.Beta)
                 {
                     prodList.InsertRange(0, selectedList);
@@ -157,6 +157,42 @@ namespace Compilers
             }
 
             return str;
+        }
+
+        public string ToOperators()
+        {
+            // Try to convert every symbol to operator
+            foreach(var list in beta)
+                foreach(var s in list)
+                    s.ConvertToOperator();
+
+            // Convert aa* to a+
+            // VERY VERY DIRTY IMPLEMENTATION. ITS ALL in ONE HOUR TEST.
+            Symbol prevSymb = new Symbol("");
+
+            foreach (var list in beta)
+            {
+                List<Symbol> deleteIndex = new List<Symbol>();
+                foreach (var s in list)
+                {
+                    string cleanCoef = s.GetCleanCoef();
+
+                    if (prevSymb.Coef.Contains(cleanCoef) && s.Coef.Contains("*"))
+                    {
+                        s.Coef = s.Coef.Remove(s.Coef.Length - 1);
+                        s.Coef += "+";
+                        deleteIndex.Add(prevSymb);
+                    }
+                    prevSymb = s;
+                }
+
+                foreach(var s in deleteIndex)
+                {
+                    list.Remove(s);
+                }
+            }
+
+            return GetBetaAsString();
         }
 
         /**
