@@ -9,8 +9,34 @@ namespace Compilers
     class Symbol
     {
         private string coef;
+        private int priority;
 
         internal string Coef { get => coef; set => coef = value; }
+        internal int Priority { get => priority; set => priority = value; }
+
+        public Symbol(char c)
+        {
+            this.coef = c.ToString();
+            switch (coef)
+            {
+                case "(":
+                    Priority = 0;
+                    break;
+                case ")":
+                    Priority = 1;
+                    break;
+                case "|":
+                    Priority = 2;
+                    break;
+                case ".":
+                    Priority = 3;
+                    break;
+                case "+":
+                case "*":
+                    Priority = 4;
+                    break;
+            }
+        }
 
         public Symbol(string coef)
         {
@@ -55,7 +81,6 @@ namespace Compilers
             }
         } 
 
-
         public string GetCleanCoef()
         {
             // TMP
@@ -68,6 +93,22 @@ namespace Compilers
                 c = c.Remove(c.Length - 1);
 
             return c;
+        }
+
+
+        public Boolean IsOperator()
+        {
+            return coef == "(" || coef == ")" || coef == "|" || coef == "." || coef == "+" || coef == "*";
+        }
+
+        public Boolean IsBinaryOperator()
+        {
+            return coef == "|" || coef == ".";
+        }
+
+        public Boolean IsUnaryOperator()
+        {
+            return coef == "+" || coef == "*";
         }
     }
 }

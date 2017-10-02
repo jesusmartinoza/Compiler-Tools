@@ -103,6 +103,7 @@ namespace Compilers
          * */
         private void btnRegex_Click(object sender, EventArgs e)
         {
+            OnBtnProductions_Click(sender, e);
             if (grammar.Type != Grammar.GrammarType.REGULAR)
                 MessageBox.Show("Grammar must be REGULAR type");
             else
@@ -123,8 +124,8 @@ namespace Compilers
                 grammar.Expand();
                 textBoxRegexLog.Text += grammar.Regex;
 
-                textBoxRegexLog.Text += "\r\n\r\nConvert to postfix\r\n";
-                textBoxRegexLog.Text += grammar.ConvertToPostfix();
+                textBoxRegexLog.Text += "\r\n\r\nConvert to posfix\r\n";
+                textBoxRegexLog.Text += grammar.ConvertToPosfix();
             }
         }
     }

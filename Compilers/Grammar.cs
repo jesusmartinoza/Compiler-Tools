@@ -23,8 +23,8 @@ namespace Compilers
         String regex;
 
         // TODO: Correct this
-        String postfix = "";
-        Stack<CharPrior> stack = new Stack<CharPrior>();
+        String posfix = "";
+        Stack<Symbol> stack = new Stack<Symbol>();
 
         internal List<Production> Productions { get => productions; set => productions = value; }
         internal GrammarType Type { get => type; set => type = value; }
@@ -303,69 +303,69 @@ namespace Compilers
             regex = productions[0].GetBetaAsString();
         }
 
-        public string ConvertToPostfix()
+        public string ConvertToPosfix()
         {
             string aux = productions[0].GetBetaAsString();
-            postfix = "";
+            posfix = "";
 
             for (int i = 0; i < aux.Length; i++)
-                PostfixOp(new CharPrior(aux[i]));
+                PosfixOp(new Symbol(aux[i]));
 
             while(stack.Count > 0)
             {
                 var cp = stack.Pop();
-                if (cp.c != '(' && cp.c != ')')
-                    postfix += cp.c;
+                if (cp.Coef != "(" && cp.Coef != ")")
+                    posfix += cp.Coef;
             }
 
-            return postfix;
+            return posfix;
         }
 
-        private void PostfixOp(CharPrior cp)
+        private void PosfixOp(Symbol cp)
         {
-            var c = cp.c;
+            var c = cp.Coef;
 
-            if (c == ' ' || c == '#')
+            if (c == " " || c == "#")
                 return;
 
-            if (c != '(' && c != ')' && c != '|' && c != '.' && c != '+' && c != '*')
-                postfix += c;
+            if (!cp.IsOperator())
+                posfix += c;
 
-            if (c == '(')
+            if (c == "(")
                 stack.Push(cp);
 
-            if (c == ')' && stack.Count > 0)
+            if (c == ")" && stack.Count > 0)
             {
-                char s;
+                string s;
                 do
                 {
-                    s = stack.Pop().c;
-                    if (s != '(' && s != ')')
-                        postfix += s;
-                } while (s != '(');
+                    s = stack.Pop().Coef;
+                    if (s != "(" && s != ")")
+                        posfix += s;
+                } while (s != "(");
             }
 
-            if (c == '(' || c == ')' || c == '|' || c == '.' || c == '+' || c == '*')
+            if (cp.IsOperator())
             {
-                if(c == '+' || c == '*')
-                    postfix += c;
+                if(cp.IsUnaryOperator())
+                    posfix += c;
                 else
                 {
                     var cont = true;
 
                     while(cont)
                     {
-                        if (stack.Count == 0 || cp.priority > stack.Peek().priority)
+                        if (stack.Count == 0 || cp.Priority > stack.Peek().Priority)
                         {
                             stack.Push(cp);
                             cont = false;
                         }
                         else
                         {
-                            var s = stack.Pop().c;
+                            var s = stack.Pop().Coef;
 
-                            if (s != '(' && s != ')')
-                                postfix += s;
+                            if (s != "(" && s != ")")
+                                posfix += s;
                             cont = true;
                         }
                     }
@@ -389,36 +389,6 @@ namespace Compilers
                 str += p.ToString() + "\r\n";
 
             return str;
-        }
-    }
-
-    public class CharPrior
-    {
-        public char c;
-        public int priority;
-
-        public CharPrior(char c)
-        {
-            this.c = c;
-            switch(c)
-            {
-                case '(':
-                    priority = 0;
-                    break;
-                case ')':
-                    priority = 1;
-                    break;
-                case '|':
-                    priority = 2;
-                    break;
-                case '.':
-                    priority = 3;
-                    break;
-                case '+':
-                case '*':
-                    priority = 4;
-                    break;
-            }
         }
     }
 }
