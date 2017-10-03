@@ -47,14 +47,20 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBoxRegexLog = new System.Windows.Forms.TextBox();
             this.btnRegex = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.materialTabSelector = new MaterialSkin.Controls.MaterialTabSelector();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnAFN = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialTabSelector = new MaterialSkin.Controls.MaterialTabSelector();
+            this.gridPictureBox = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewImageColumn();
             this.gpGrammar.SuspendLayout();
             this.gpResult.SuspendLayout();
             this.materialTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // tbGrammar
@@ -261,6 +267,33 @@
             this.btnRegex.UseVisualStyleBackColor = true;
             this.btnRegex.Click += new System.EventHandler(this.btnRegex_Click);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.gridPictureBox);
+            this.tabPage3.Controls.Add(this.btnAFN);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(666, 295);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "AFN";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // btnAFN
+            // 
+            this.btnAFN.AutoSize = true;
+            this.btnAFN.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAFN.Depth = 0;
+            this.btnAFN.Icon = null;
+            this.btnAFN.Location = new System.Drawing.Point(565, 256);
+            this.btnAFN.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnAFN.Name = "btnAFN";
+            this.btnAFN.Primary = true;
+            this.btnAFN.Size = new System.Drawing.Size(90, 36);
+            this.btnAFN.TabIndex = 1;
+            this.btnAFN.Text = "Draw AFN";
+            this.btnAFN.UseVisualStyleBackColor = true;
+            this.btnAFN.Click += new System.EventHandler(this.btnAFN_Click);
+            // 
             // materialTabSelector
             // 
             this.materialTabSelector.BaseTabControl = this.materialTabControl1;
@@ -272,14 +305,44 @@
             this.materialTabSelector.TabIndex = 5;
             this.materialTabSelector.Text = "materialTabSelector1";
             // 
-            // tabPage3
+            // gridPictureBox
             // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(666, 295);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "AFN";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.gridPictureBox.AllowUserToAddRows = false;
+            this.gridPictureBox.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.gridPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.gridPictureBox.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridPictureBox.ColumnHeadersVisible = false;
+            this.gridPictureBox.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.Column2});
+            this.gridPictureBox.Location = new System.Drawing.Point(9, 3);
+            this.gridPictureBox.Name = "gridPictureBox";
+            this.gridPictureBox.ReadOnly = true;
+            this.gridPictureBox.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.gridPictureBox.RowHeadersVisible = false;
+            this.gridPictureBox.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.White;
+            this.gridPictureBox.RowTemplate.Height = 120;
+            this.gridPictureBox.ShowCellErrors = false;
+            this.gridPictureBox.ShowEditingIcon = false;
+            this.gridPictureBox.ShowRowErrors = false;
+            this.gridPictureBox.Size = new System.Drawing.Size(646, 247);
+            this.gridPictureBox.TabIndex = 2;
+            // 
+            // Column1
+            // 
+            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column1.HeaderText = "";
+            this.Column1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            // 
+            // Column2
+            // 
+            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column2.HeaderText = "";
+            this.Column2.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
             // 
             // MainForm
             // 
@@ -302,6 +365,9 @@
             this.tabPage2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -328,6 +394,10 @@
         private MaterialSkin.Controls.MaterialRaisedButton btnRegex;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TabPage tabPage3;
+        private MaterialSkin.Controls.MaterialRaisedButton btnAFN;
+        private System.Windows.Forms.DataGridView gridPictureBox;
+        private System.Windows.Forms.DataGridViewImageColumn Column1;
+        private System.Windows.Forms.DataGridViewImageColumn Column2;
     }
 }
 

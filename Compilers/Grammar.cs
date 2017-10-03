@@ -23,12 +23,13 @@ namespace Compilers
         String regex;
 
         // TODO: Correct this
-        String posfix = "";
+        List<Symbol> posfixList = new List<Symbol>();
         Stack<Symbol> stack = new Stack<Symbol>();
 
         internal List<Production> Productions { get => productions; set => productions = value; }
         internal GrammarType Type { get => type; set => type = value; }
         internal string Regex { get => regex; set => regex = value; }
+        internal List<Symbol> PosfixList { get => posfixList; set => posfixList = value; }
 
         public Grammar()
         {
@@ -277,6 +278,9 @@ namespace Compilers
             textBox.Text += "ER => " + regex;
         }
         
+        /**
+         * Insert a dot symbol between the actual symbol
+         * */
         public void Expand()
         {
             // Insert in none positions a dot
@@ -303,24 +307,38 @@ namespace Compilers
             regex = productions[0].GetBetaAsString();
         }
 
+        /**
+         * Get regex and extract every symbol as char, then
+         * apply a posfix reorder
+         * */
         public string ConvertToPosfix()
         {
-            string aux = productions[0].GetBetaAsString();
-            posfix = "";
+            string posfix = "";
+            PosfixList.Clear();
 
-            for (int i = 0; i < aux.Length; i++)
-                PosfixOp(new Symbol(aux[i]));
+            for (int i = 0; i < regex.Length; i++)
+                PosfixOp(new Symbol(regex[i]));
 
             while(stack.Count > 0)
             {
                 var cp = stack.Pop();
                 if (cp.Coef != "(" && cp.Coef != ")")
-                    posfix += cp.Coef;
+                    PosfixList.Add(cp);
             }
+
+            foreach(Symbol s in PosfixList)
+            {
+                posfix += s.Coef;
+            }
+
 
             return posfix;
         }
 
+
+        /**
+         * Helper method to convert regex to posfix
+         * */
         private void PosfixOp(Symbol cp)
         {
             var c = cp.Coef;
@@ -329,7 +347,7 @@ namespace Compilers
                 return;
 
             if (!cp.IsOperator())
-                posfix += c;
+                PosfixList.Add(cp);
 
             if (c == "(")
                 stack.Push(cp);
@@ -341,14 +359,14 @@ namespace Compilers
                 {
                     s = stack.Pop().Coef;
                     if (s != "(" && s != ")")
-                        posfix += s;
+                        PosfixList.Add(cp);
                 } while (s != "(");
             }
 
             if (cp.IsOperator())
             {
                 if(cp.IsUnaryOperator())
-                    posfix += c;
+                    PosfixList.Add(cp);
                 else
                 {
                     var cont = true;
@@ -365,7 +383,7 @@ namespace Compilers
                             var s = stack.Pop().Coef;
 
                             if (s != "(" && s != ")")
-                                posfix += s;
+                                PosfixList.Add(cp);
                             cont = true;
                         }
                     }
