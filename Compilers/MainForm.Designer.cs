@@ -48,11 +48,11 @@
             this.textBoxRegexLog = new System.Windows.Forms.TextBox();
             this.btnRegex = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.btnAFN = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.materialTabSelector = new MaterialSkin.Controls.MaterialTabSelector();
             this.gridPictureBox = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.btnAFN = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialTabSelector = new MaterialSkin.Controls.MaterialTabSelector();
             this.gpGrammar.SuspendLayout();
             this.gpResult.SuspendLayout();
             this.materialTabControl1.SuspendLayout();
@@ -70,6 +70,7 @@
             this.tbGrammar.Name = "tbGrammar";
             this.tbGrammar.Size = new System.Drawing.Size(295, 163);
             this.tbGrammar.TabIndex = 0;
+            this.tbGrammar.Text = "S->aA\r\nS->a\r\nA->aA\r\nA->bB\r\nA->a\r\nB->bB\r\nB->c";
             // 
             // gpGrammar
             // 
@@ -278,33 +279,6 @@
             this.tabPage3.Text = "AFN";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // btnAFN
-            // 
-            this.btnAFN.AutoSize = true;
-            this.btnAFN.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnAFN.Depth = 0;
-            this.btnAFN.Icon = null;
-            this.btnAFN.Location = new System.Drawing.Point(565, 256);
-            this.btnAFN.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnAFN.Name = "btnAFN";
-            this.btnAFN.Primary = true;
-            this.btnAFN.Size = new System.Drawing.Size(90, 36);
-            this.btnAFN.TabIndex = 1;
-            this.btnAFN.Text = "Draw AFN";
-            this.btnAFN.UseVisualStyleBackColor = true;
-            this.btnAFN.Click += new System.EventHandler(this.btnAFN_Click);
-            // 
-            // materialTabSelector
-            // 
-            this.materialTabSelector.BaseTabControl = this.materialTabControl1;
-            this.materialTabSelector.Depth = 0;
-            this.materialTabSelector.Location = new System.Drawing.Point(0, 62);
-            this.materialTabSelector.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialTabSelector.Name = "materialTabSelector";
-            this.materialTabSelector.Size = new System.Drawing.Size(673, 37);
-            this.materialTabSelector.TabIndex = 5;
-            this.materialTabSelector.Text = "materialTabSelector1";
-            // 
             // gridPictureBox
             // 
             this.gridPictureBox.AllowUserToAddRows = false;
@@ -343,6 +317,33 @@
             this.Column2.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
+            // 
+            // btnAFN
+            // 
+            this.btnAFN.AutoSize = true;
+            this.btnAFN.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAFN.Depth = 0;
+            this.btnAFN.Icon = null;
+            this.btnAFN.Location = new System.Drawing.Point(565, 256);
+            this.btnAFN.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnAFN.Name = "btnAFN";
+            this.btnAFN.Primary = true;
+            this.btnAFN.Size = new System.Drawing.Size(90, 36);
+            this.btnAFN.TabIndex = 1;
+            this.btnAFN.Text = "Draw AFN";
+            this.btnAFN.UseVisualStyleBackColor = true;
+            this.btnAFN.Click += new System.EventHandler(this.btnAFN_Click);
+            // 
+            // materialTabSelector
+            // 
+            this.materialTabSelector.BaseTabControl = this.materialTabControl1;
+            this.materialTabSelector.Depth = 0;
+            this.materialTabSelector.Location = new System.Drawing.Point(0, 62);
+            this.materialTabSelector.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialTabSelector.Name = "materialTabSelector";
+            this.materialTabSelector.Size = new System.Drawing.Size(673, 37);
+            this.materialTabSelector.TabIndex = 5;
+            this.materialTabSelector.Text = "materialTabSelector1";
             // 
             // MainForm
             // 

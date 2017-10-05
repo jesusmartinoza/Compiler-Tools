@@ -138,15 +138,16 @@ namespace Compilers
 
         private async void btnAFN_Click(object sender, EventArgs e)
         {
+            btnRegex_Click(sender, e);
             Object[] row = new Object[2];
 
+            gridPictureBox.Rows.Clear();
             graphCreator.Symbols = grammar.PosfixList;
             graphCreator.CreateImages();
-            gridPictureBox.Rows.Clear();
 
             // Draw 2 graphs per row
             int i = 0;
-            foreach(var im in graphCreator.Images)
+            foreach(var im in graphCreator.Images.Values)
             {
                 row[i % 2] = im;
 

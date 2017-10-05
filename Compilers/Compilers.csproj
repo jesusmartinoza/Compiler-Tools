@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Grammar.cs" />
     <Compile Include="GraphCreator.cs" />
+    <Compile Include="GraphStruct.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
