@@ -65,7 +65,6 @@ namespace Compilers
 
                     await CreateImageFromGraph(graph, i);
                     edges.Add(new Edge(2, 3, s.Coef));
-                    edges.Add(new Edge(3, 4, "ε"));
                     graphs.Add(new GraphStruct(nodes, edges));
                 } else if(s.Coef.Equals("+"))
                 {
@@ -95,6 +94,11 @@ namespace Compilers
                 {
                     ConcatOperation();
                     await CreateGraphFromStackTop("Concat operation");
+                }
+                else if (s.Coef.Equals("|"))
+                {
+                    OrOperation();
+                    await CreateGraphFromStackTop("Or operation");
                 }
                 i++;
             }
@@ -146,11 +150,9 @@ namespace Compilers
             GraphStruct prevGraph = graphs.ElementAt(graphs.Count - 2);
 
             prevGraph.RemoveLastNode();
-
-            int nodesCount = prevGraph.Nodes.Count;
-
             //topGraph.RemoveFirstNode();
 
+            int nodesCount = prevGraph.Nodes.Count;
             // Edge to connect last node of prevGraph with first node of stack top.
             prevGraph.Edges.Add(new Edge(nodesCount, nodesCount + 1, "ε"));
 
@@ -160,6 +162,35 @@ namespace Compilers
 
             foreach(var node in topGraph.Nodes)
                 prevGraph.Nodes.Add(node + nodesCount);
+
+            // Delete stack top because it's already concatenate.
+            graphs.RemoveAt(graphs.Count - 1);
+        }
+
+        private void OrOperation()
+        {
+            GraphStruct topGraph = graphs.Last();
+            GraphStruct prevGraph = graphs.ElementAt(graphs.Count - 2);
+
+            prevGraph.RemoveLastNode();
+            topGraph.RemoveLastNode();
+
+            int tnodesCount = topGraph.Nodes.Count;
+            int pnodesCount = prevGraph.Nodes.Count;
+            // Add stack top edges to (top-1) edges
+            foreach (Edge e in topGraph.Edges)
+                prevGraph.Edges.Add(new Edge(e.Origin + pnodesCount, e.Dest + pnodesCount, e.Label));
+
+            // Add node 0 and relate them
+            prevGraph.Nodes.Add(0);
+            prevGraph.Edges.Add(new Edge(0, 1, "ε"));
+            prevGraph.Edges.Add(new Edge(0, pnodesCount + 1, "ε"));
+
+            // Add last node and relate them
+            int lastNode = tnodesCount + pnodesCount + 1;
+            prevGraph.Nodes.Add(tnodesCount);
+            prevGraph.Edges.Add(new Edge(pnodesCount, lastNode, "ε"));
+            prevGraph.Edges.Add(new Edge(lastNode - 1, lastNode, "ε"));
 
             // Delete stack top because it's already concatenate.
             graphs.RemoveAt(graphs.Count - 1);
