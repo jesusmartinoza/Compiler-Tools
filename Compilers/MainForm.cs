@@ -22,12 +22,14 @@ namespace Compilers
     public partial class MainForm : MaterialForm
     {
         private Grammar grammar;
+        private GraphCreator graphCreator;
 
         public MainForm()
         {
             InitializeComponent();
 
             grammar = new Grammar();
+            graphCreator = new GraphCreator();
 
             // Config material skin
             var materialSkinManager = MaterialSkinManager.Instance;
@@ -136,74 +138,22 @@ namespace Compilers
 
         private async void btnAFN_Click(object sender, EventArgs e)
         {
-            IRenderer renderer = new Renderer(@"C:\Program Files (x86)\Graphviz2.38\bin");
-
             Object[] row = new Object[2];
 
-            // Draw 3 graphs per row
-            for (int i = 0; i < grammar.PosfixList.Count; i++)
-            {
-                var s = grammar.PosfixList[i];
+            graphCreator.Symbols = grammar.PosfixList;
+            graphCreator.CreateImages();
+            gridPictureBox.Rows.Clear();
 
-                if(row.Count() == 2)
+            // Draw 2 graphs per row
+            int i = 0;
+            foreach(var im in graphCreator.Images)
+            {
+                row[i % 2] = im;
+
+                if (i % 2 == 1)
                     gridPictureBox.Rows.Add(row);
 
-                if (!s.IsOperator())
-                {
-                    var ep = ImmutableDictionary.CreateBuilder<Id, Id>();
-                    ep.Add("label", "ε");
-
-                    var label = ImmutableDictionary.CreateBuilder<Id, Id>();
-                    ep.Add("label", s.Coef);
-
-                    Graph graph = Graph.Directed
-                        .Add(AttributeStatement.Graph.Set("rankdir", "LR"))
-                        .Add(AttributeStatement.Graph.Set("labelloc", "t"))
-                        .Add(AttributeStatement.Graph.Set("label", "Graph " + i + " for " + s.Coef))
-                        .Add(new EdgeStatement("1", "2", ep.ToImmutable()))
-                        .Add(new EdgeStatement("2", "3", label.ToImmutable()))
-                        .Add(new EdgeStatement("3", "4", ep.ToImmutable()));
-
-                    using (Stream file = new MemoryStream())
-                    {
-                        await renderer.RunAsync(
-                            graph, file,
-                            RendererLayouts.Dot,
-                            RendererFormats.Png,
-                            CancellationToken.None);
-
-                        Image image = Image.FromStream(file);
-                        row[i % 2] = image;
-                    }
-                } else
-                {
-
-                    var ep = ImmutableDictionary.CreateBuilder<Id, Id>();
-                    ep.Add("label", "ε");
-
-                    var label = ImmutableDictionary.CreateBuilder<Id, Id>();
-                    ep.Add("label", s.Coef);
-                    Graph graph = Graph.Directed
-                        .Add(AttributeStatement.Graph.Set("rankdir", "LR"))
-                        .Add(AttributeStatement.Graph.Set("labelloc", "t"))
-                        .Add(AttributeStatement.Graph.Set("label", "Graph " + i + " for " + s.Coef))
-                        .Add(new EdgeStatement("1", "2", ep.ToImmutable()))
-                        .Add(new EdgeStatement("2", "3", label.ToImmutable()))
-                        .Add(new EdgeStatement("3", "2", label.ToImmutable()))
-                        .Add(new EdgeStatement("3", "4", ep.ToImmutable()));
-
-                    using (Stream file = new MemoryStream())
-                    {
-                        await renderer.RunAsync(
-                            graph, file,
-                            RendererLayouts.Dot,
-                            RendererFormats.Png,
-                            CancellationToken.None);
-
-                        Image image = Image.FromStream(file);
-                        row[i % 2] = image;
-                    }
-                }
+                i++;
             }
         }
     }

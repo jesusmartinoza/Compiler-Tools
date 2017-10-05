@@ -22,9 +22,8 @@ namespace Compilers
         GrammarType type;
         String regex;
 
-        // TODO: Correct this
-        List<Symbol> posfixList = new List<Symbol>();
-        Stack<Symbol> stack = new Stack<Symbol>();
+        List<Symbol> posfixList;
+        Stack<Symbol> stack;
 
         internal List<Production> Productions { get => productions; set => productions = value; }
         internal GrammarType Type { get => type; set => type = value; }
@@ -35,6 +34,8 @@ namespace Compilers
         {
             Productions = new List<Production>();
             Type = GrammarType.NO_TYPE;
+            posfixList = new List<Symbol>();
+            stack = new Stack<Symbol>();
         }
 
         /**
@@ -292,6 +293,9 @@ namespace Compilers
                 {
                     if (i != list.Count - 1 && list[i].Coef != ".")
                     {
+                        // If symbol contains parenthesis insert points manually :S
+                        //string result = Regex.Replace(list[i].Coef, @"(?<!^)(\B|b)(?!$)", " ");
+
                         list.Insert(i + 1, new Symbol("."));
                         i += 2;
                     } else
@@ -322,7 +326,7 @@ namespace Compilers
             while(stack.Count > 0)
             {
                 var cp = stack.Pop();
-                if (cp.Coef != "(" && cp.Coef != ")")
+                if (!cp.Coef.Equals("(") && !cp.Coef.Equals(")"))
                     PosfixList.Add(cp);
             }
 
@@ -354,12 +358,15 @@ namespace Compilers
 
             if (c == ")" && stack.Count > 0)
             {
-                string s;
+                Symbol sy;
+                String s;
                 do
                 {
-                    s = stack.Pop().Coef;
-                    if (s != "(" && s != ")")
-                        PosfixList.Add(cp);
+                    sy = stack.Pop();
+                    s = sy.Coef;
+
+                    if (!s.Equals("(") && !s.Equals(")"))
+                        PosfixList.Add(sy);
                 } while (s != "(");
             }
 
@@ -380,10 +387,11 @@ namespace Compilers
                         }
                         else
                         {
-                            var s = stack.Pop().Coef;
+                            var sy = stack.Pop();
+                            var s = sy.Coef;
 
-                            if (s != "(" && s != ")")
-                                PosfixList.Add(cp);
+                            if (!s.Equals("(") && !s.Equals(")"))
+                                PosfixList.Add(sy);
                             cont = true;
                         }
                     }

@@ -16,7 +16,7 @@ namespace Compilers
 
         public Symbol(char c)
         {
-            this.coef = c.ToString();
+            coef = c.ToString();
             switch (coef)
             {
                 case "(":
