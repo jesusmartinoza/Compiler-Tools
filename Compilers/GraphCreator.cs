@@ -55,8 +55,7 @@ namespace Compilers
                 // Create 4 nodes when are symbol, + or *
                 if (!s.IsOperator() || s.Coef.Equals("+") || s.Coef.Equals("*"))
                 {
-                    nodes = new List<Int32>() { 1, 2, 3, 4 };
-                    edges = new List<Edge>() {new Edge(1, 2, "ε"), new Edge(3, 4, "ε")};
+                    nodes = new List<Int32>() { 1, 2 };
                 }
 
                 if (!s.IsOperator())
@@ -64,27 +63,32 @@ namespace Compilers
                     Graph graph = CreateRegularGraph(s, s.Coef);
 
                     await CreateImageFromGraph(graph, i);
-                    edges.Add(new Edge(2, 3, s.Coef));
+                    edges.Add(new Edge(1, 2, s.Coef));
                     graphs.Add(new GraphStruct(nodes, edges));
                 } else if(s.Coef.Equals("+"))
                 {
                     // Add positive kleene closure to previous symbol
                     Graph graph = CreateRegularGraph(Symbols[i - 1], s.Coef)
-                                  .Add(new EdgeStatement("3", "2", ep.ToImmutable()));
+                                  .Add(new EdgeStatement("2", "1", ep.ToImmutable()));
 
                     await CreateImageFromGraph(graph, i);
-                    edges.Add(new Edge(2, 3, Symbols[i - 1].Coef));
-                    edges.Add(new Edge(3, 2, "ε"));
+                    edges.Add(new Edge(1, 2, Symbols[i - 1].Coef));
+                    edges.Add(new Edge(2, 1, "ε"));
                     graphs.RemoveAt(graphs.Count - 1);
                     graphs.Add(new GraphStruct(nodes, edges));
                 } else if (s.Coef.Equals("*"))
                 {
+                    var label = ImmutableDictionary.CreateBuilder<Id, Id>();
+                    label.Add("label", s.Coef);
                     // Add star kleene closure to previous symbol
                     Graph graph = CreateRegularGraph(Symbols[i - 1], s.Coef)
+                                  .Add(new EdgeStatement("2", "3", label.ToImmutable()))
                                   .Add(new EdgeStatement("3", "2", ep.ToImmutable()))
                                   .Add(new EdgeStatement("1", "4", ep.ToImmutable()));
                     await CreateImageFromGraph(graph, i);
 
+                    nodes.Add(3);
+                    nodes.Add(4);
                     edges.Add(new Edge(2, 3, Symbols[i - 1].Coef));
                     edges.Add(new Edge(3, 2, "ε"));
                     edges.Add(new Edge(1, 4, "ε"));
@@ -106,38 +110,6 @@ namespace Compilers
             return true;
         }
 
-        private async Task CreateGraphFromStackTop(String title)
-        {
-            List<EdgeStatement> edges = new List<EdgeStatement>();
-
-            foreach(Edge e in graphs.Last().Edges)
-            {
-                var label = ImmutableDictionary.CreateBuilder<Id, Id>();
-                label.Add("label", e.Label);
-
-                edges.Add(new EdgeStatement(e.Origin.ToString(), e.Dest.ToString(), label.ToImmutable()));
-            }
-
-            Graph graph = Graph.Directed
-                .Add(AttributeStatement.Graph.Set("rankdir", "LR"))
-                .Add(AttributeStatement.Graph.Set("labelloc", "t"))
-                .Add(AttributeStatement.Node.Set("style", "filled"))
-                .Add(AttributeStatement.Node.Set("fillcolor", "#FDE3A7"))
-                .Add(AttributeStatement.Graph.Set("label",  title))
-                .AddRange(edges);
-
-            using (Stream file = new MemoryStream())
-            {
-                await renderer.RunAsync(
-                    graph, file,
-                    RendererLayouts.Dot,
-                    RendererFormats.Png,
-                    CancellationToken.None);
-
-                Images.Add(images.Count, Image.FromStream(file));
-            }
-        }
-
         /**
          * Join (stack top - 1) with stack top.
          * 
@@ -149,7 +121,7 @@ namespace Compilers
             GraphStruct topGraph = graphs.Last();
             GraphStruct prevGraph = graphs.ElementAt(graphs.Count - 2);
 
-            prevGraph.RemoveLastNode();
+            //prevGraph.RemoveLastNode();
             //topGraph.RemoveFirstNode();
 
             int nodesCount = prevGraph.Nodes.Count;
@@ -171,26 +143,31 @@ namespace Compilers
         {
             GraphStruct topGraph = graphs.Last();
             GraphStruct prevGraph = graphs.ElementAt(graphs.Count - 2);
-
-            prevGraph.RemoveLastNode();
-            topGraph.RemoveLastNode();
-
-            int tnodesCount = topGraph.Nodes.Count;
+            
+            prevGraph.Nodes.Sort();
             int pnodesCount = prevGraph.Nodes.Count;
+            int tnodesCount = topGraph.Nodes.Count;
+
+            int firstNode = prevGraph.Nodes.First();
+            int lastNode = prevGraph.Nodes.Last();
             // Add stack top edges to (top-1) edges
             foreach (Edge e in topGraph.Edges)
-                prevGraph.Edges.Add(new Edge(e.Origin + pnodesCount, e.Dest + pnodesCount, e.Label));
+                prevGraph.Edges.Add(new Edge(e.Origin + lastNode, e.Dest + lastNode, e.Label));
 
             // Add node 0 and relate them
-            prevGraph.Nodes.Add(0);
-            prevGraph.Edges.Add(new Edge(0, 1, "ε"));
-            prevGraph.Edges.Add(new Edge(0, pnodesCount + 1, "ε"));
+            prevGraph.Nodes.Add(firstNode - 1);
+            prevGraph.Edges.Add(new Edge(firstNode - 1, firstNode, "ε"));
+            prevGraph.Edges.Add(new Edge(firstNode - 1, lastNode + 1, "ε"));
 
+            prevGraph.Nodes.Sort();
             // Add last node and relate them
-            int lastNode = tnodesCount + pnodesCount + 1;
-            prevGraph.Nodes.Add(tnodesCount);
-            prevGraph.Edges.Add(new Edge(pnodesCount, lastNode, "ε"));
+            lastNode = tnodesCount + pnodesCount + firstNode;
+            prevGraph.Edges.Add(new Edge(prevGraph.Nodes.Last(), lastNode, "ε"));
             prevGraph.Edges.Add(new Edge(lastNode - 1, lastNode, "ε"));
+            prevGraph.Nodes.Add(lastNode);
+            
+            foreach (var node in topGraph.Nodes)
+                prevGraph.Nodes.Add(node + pnodesCount - 1);
 
             // Delete stack top because it's already concatenate.
             graphs.RemoveAt(graphs.Count - 1);
@@ -217,9 +194,7 @@ namespace Compilers
                 .Add(AttributeStatement.Node.Set("style", "filled"))
                 .Add(AttributeStatement.Node.Set("fillcolor", "#ECF0F1"))
                 .Add(AttributeStatement.Graph.Set("label", "Graph for " + title))
-                .Add(new EdgeStatement("1", "2", ep.ToImmutable()))
-                .Add(new EdgeStatement("2", "3", label.ToImmutable()))
-                .Add(new EdgeStatement("3", "4", ep.ToImmutable()));
+                .Add(new EdgeStatement("1", "2", label.ToImmutable()));
         }
 
         /**
@@ -236,6 +211,38 @@ namespace Compilers
                     CancellationToken.None);
 
                 Images.Add(i, Image.FromStream(file));
+            }
+        }
+
+        private async Task CreateGraphFromStackTop(String title)
+        {
+            List<EdgeStatement> edges = new List<EdgeStatement>();
+
+            foreach (Edge e in graphs.Last().Edges)
+            {
+                var label = ImmutableDictionary.CreateBuilder<Id, Id>();
+                label.Add("label", e.Label);
+
+                edges.Add(new EdgeStatement(e.Origin.ToString(), e.Dest.ToString(), label.ToImmutable()));
+            }
+
+            Graph graph = Graph.Directed
+                .Add(AttributeStatement.Graph.Set("rankdir", "LR"))
+                .Add(AttributeStatement.Graph.Set("labelloc", "t"))
+                .Add(AttributeStatement.Node.Set("style", "filled"))
+                .Add(AttributeStatement.Node.Set("fillcolor", "#FDE3A7"))
+                .Add(AttributeStatement.Graph.Set("label", title))
+                .AddRange(edges);
+
+            using (Stream file = File.Create(title + ".png"))
+            {
+                await renderer.RunAsync(
+                    graph, file,
+                    RendererLayouts.Dot,
+                    RendererFormats.Png,
+                    CancellationToken.None);
+
+                Images.Add(images.Count, Image.FromStream(file));
             }
         }
     }
