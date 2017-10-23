@@ -48,10 +48,18 @@
             this.textBoxRegexLog = new System.Windows.Forms.TextBox();
             this.btnRegex = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.gridPictureBox = new System.Windows.Forms.DataGridView();
+            this.gridAFN = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewImageColumn();
             this.btnAFN = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.pictureAFD = new System.Windows.Forms.PictureBox();
+            this.btnAFD = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.listViewFirst = new MaterialSkin.Controls.MaterialListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.materialTabSelector = new MaterialSkin.Controls.MaterialTabSelector();
             this.gpGrammar.SuspendLayout();
             this.gpResult.SuspendLayout();
@@ -60,7 +68,11 @@
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridAFN)).BeginInit();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureAFD)).BeginInit();
+            this.tabPage5.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbGrammar
@@ -70,7 +82,7 @@
             this.tbGrammar.Name = "tbGrammar";
             this.tbGrammar.Size = new System.Drawing.Size(295, 163);
             this.tbGrammar.TabIndex = 0;
-            this.tbGrammar.Text = "S->aA\r\nS->a\r\nA->aA\r\nA->bB\r\nA->a\r\nB->bB\r\nB->c";
+            this.tbGrammar.Text = "E -> TE\'\r\nE\' -> +TE\' | ε\r\nT -> FT\'\r\nT\' -> *FT\' | ε\r\nF -> (E) | i\r\n";
             // 
             // gpGrammar
             // 
@@ -198,6 +210,8 @@
             this.materialTabControl1.Controls.Add(this.tabPage1);
             this.materialTabControl1.Controls.Add(this.tabPage2);
             this.materialTabControl1.Controls.Add(this.tabPage3);
+            this.materialTabControl1.Controls.Add(this.tabPage4);
+            this.materialTabControl1.Controls.Add(this.tabPage5);
             this.materialTabControl1.Depth = 0;
             this.materialTabControl1.Location = new System.Drawing.Point(-1, 101);
             this.materialTabControl1.MouseState = MaterialSkin.MouseState.HOVER;
@@ -205,6 +219,7 @@
             this.materialTabControl1.SelectedIndex = 0;
             this.materialTabControl1.Size = new System.Drawing.Size(674, 321);
             this.materialTabControl1.TabIndex = 4;
+            this.materialTabControl1.SelectedIndexChanged += new System.EventHandler(this.materialTabControl1_SelectedIndexChanged);
             // 
             // tabPage1
             // 
@@ -270,7 +285,7 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.gridPictureBox);
+            this.tabPage3.Controls.Add(this.gridAFN);
             this.tabPage3.Controls.Add(this.btnAFN);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -279,28 +294,28 @@
             this.tabPage3.Text = "AFN";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // gridPictureBox
+            // gridAFN
             // 
-            this.gridPictureBox.AllowUserToAddRows = false;
-            this.gridPictureBox.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.gridPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.gridPictureBox.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridPictureBox.ColumnHeadersVisible = false;
-            this.gridPictureBox.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.gridAFN.AllowUserToAddRows = false;
+            this.gridAFN.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.gridAFN.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.gridAFN.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridAFN.ColumnHeadersVisible = false;
+            this.gridAFN.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column2});
-            this.gridPictureBox.Location = new System.Drawing.Point(9, 3);
-            this.gridPictureBox.Name = "gridPictureBox";
-            this.gridPictureBox.ReadOnly = true;
-            this.gridPictureBox.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.gridPictureBox.RowHeadersVisible = false;
-            this.gridPictureBox.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.White;
-            this.gridPictureBox.RowTemplate.Height = 120;
-            this.gridPictureBox.ShowCellErrors = false;
-            this.gridPictureBox.ShowEditingIcon = false;
-            this.gridPictureBox.ShowRowErrors = false;
-            this.gridPictureBox.Size = new System.Drawing.Size(646, 247);
-            this.gridPictureBox.TabIndex = 2;
+            this.gridAFN.Location = new System.Drawing.Point(9, 3);
+            this.gridAFN.Name = "gridAFN";
+            this.gridAFN.ReadOnly = true;
+            this.gridAFN.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.gridAFN.RowHeadersVisible = false;
+            this.gridAFN.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.White;
+            this.gridAFN.RowTemplate.Height = 120;
+            this.gridAFN.ShowCellErrors = false;
+            this.gridAFN.ShowEditingIcon = false;
+            this.gridAFN.ShowRowErrors = false;
+            this.gridAFN.Size = new System.Drawing.Size(646, 247);
+            this.gridAFN.TabIndex = 2;
             // 
             // Column1
             // 
@@ -333,6 +348,82 @@
             this.btnAFN.Text = "Draw AFN";
             this.btnAFN.UseVisualStyleBackColor = true;
             this.btnAFN.Click += new System.EventHandler(this.btnAFN_Click);
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.pictureAFD);
+            this.tabPage4.Controls.Add(this.btnAFD);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(666, 295);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "AFD";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // pictureAFD
+            // 
+            this.pictureAFD.Location = new System.Drawing.Point(9, 0);
+            this.pictureAFD.Name = "pictureAFD";
+            this.pictureAFD.Size = new System.Drawing.Size(646, 250);
+            this.pictureAFD.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureAFD.TabIndex = 5;
+            this.pictureAFD.TabStop = false;
+            // 
+            // btnAFD
+            // 
+            this.btnAFD.AutoSize = true;
+            this.btnAFD.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAFD.Depth = 0;
+            this.btnAFD.Icon = null;
+            this.btnAFD.Location = new System.Drawing.Point(565, 256);
+            this.btnAFD.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnAFD.Name = "btnAFD";
+            this.btnAFD.Primary = true;
+            this.btnAFD.Size = new System.Drawing.Size(90, 36);
+            this.btnAFD.TabIndex = 4;
+            this.btnAFD.Text = "Draw AFN";
+            this.btnAFD.UseVisualStyleBackColor = true;
+            this.btnAFD.Click += new System.EventHandler(this.btnAFD_Click);
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.groupBox2);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(666, 295);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "FIRST/NEXT";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.listViewFirst);
+            this.groupBox2.Location = new System.Drawing.Point(9, 3);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(132, 267);
+            this.groupBox2.TabIndex = 0;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "FIRST";
+            // 
+            // listViewFirst
+            // 
+            this.listViewFirst.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewFirst.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.listViewFirst.Depth = 0;
+            this.listViewFirst.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
+            this.listViewFirst.FullRowSelect = true;
+            this.listViewFirst.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewFirst.Location = new System.Drawing.Point(6, 19);
+            this.listViewFirst.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.listViewFirst.MouseState = MaterialSkin.MouseState.OUT;
+            this.listViewFirst.Name = "listViewFirst";
+            this.listViewFirst.OwnerDraw = true;
+            this.listViewFirst.Size = new System.Drawing.Size(120, 242);
+            this.listViewFirst.TabIndex = 1;
+            this.listViewFirst.UseCompatibleStateImageBehavior = false;
+            this.listViewFirst.View = System.Windows.Forms.View.Details;
             // 
             // materialTabSelector
             // 
@@ -368,7 +459,12 @@
             this.groupBox1.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridAFN)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureAFD)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -396,9 +492,17 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TabPage tabPage3;
         private MaterialSkin.Controls.MaterialRaisedButton btnAFN;
-        private System.Windows.Forms.DataGridView gridPictureBox;
+        private System.Windows.Forms.DataGridView gridAFN;
         private System.Windows.Forms.DataGridViewImageColumn Column1;
         private System.Windows.Forms.DataGridViewImageColumn Column2;
+        private System.Windows.Forms.TabPage tabPage4;
+        private MaterialSkin.Controls.MaterialRaisedButton btnAFD;
+        private System.Windows.Forms.PictureBox pictureAFD;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private MaterialSkin.Controls.MaterialListView listViewFirst;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
     }
 }
 

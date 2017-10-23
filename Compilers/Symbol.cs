@@ -50,7 +50,7 @@ namespace Compilers
         {
             int n;
             
-            return coef.All(char.IsLower) || Int32.TryParse(coef, out n);
+            return IsOperator() || coef.All(char.IsLower) || Int32.TryParse(coef, out n);
         }
 
         /**

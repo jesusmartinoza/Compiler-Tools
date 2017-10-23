@@ -27,6 +27,7 @@ namespace Compilers
         public MainForm()
         {
             InitializeComponent();
+            CenterToScreen();
 
             grammar = new Grammar();
             graphCreator = new GraphCreator();
@@ -87,7 +88,17 @@ namespace Compilers
 
             symbolsStr.Trim();
             foreach (var c in symbolsStr)
-                symbols.Add(new Symbol(c.ToString()));
+            {
+                if(c == '\'')
+                {
+                    var symb = symbols.Last();
+                    symb.Coef += "'";
+                } else if(c != ' ')
+                {
+                    symbols.Add(new Symbol(c.ToString()));
+                }
+
+            }
             
             return symbols;
         }
@@ -136,12 +147,55 @@ namespace Compilers
             }
         }
 
+        Dictionary<String, String> dic = new Dictionary<String, String>();
+        private void CalculateFirst()
+        {
+            foreach(var p in grammar.Productions)
+            {
+                if(!dic.ContainsKey(p.GetAlphaAsString()))
+                    dic.Add(p.GetAlphaAsString(), GetFirstOf(p));
+                else
+                    dic[p.GetAlphaAsString()] += ", " + GetFirstOf(p);
+            }
+
+            foreach(string s in dic.Values)
+            {
+                var listViewItem = new ListViewItem(s);
+                listViewFirst.Items.Add(listViewItem);
+            }
+        }
+
+        private String GetFirstOf(Production p)
+        {
+            var first = "";
+
+            if (p == null)
+                return first;
+
+            foreach (var list in p.Beta)
+            {
+                var firstSymb = list[0];
+                if (firstSymb.IsTerminal())
+                {
+                    first += " " + firstSymb.Coef;
+                    break;
+                }
+                else
+                {
+                    foreach (var p2 in grammar.GetProductions(firstSymb.Coef))
+                        first += GetFirstOf(p2) + ", ";
+;                }
+            }
+
+            return first;
+        }
+
         private async void btnAFN_Click(object sender, EventArgs e)
         {
             btnRegex_Click(sender, e);
             Object[] row = new Object[2];
 
-            gridPictureBox.Rows.Clear();
+            gridAFN.Rows.Clear();
             graphCreator.Symbols = grammar.PosfixList;
             graphCreator.CreateImages();
 
@@ -152,9 +206,31 @@ namespace Compilers
                 row[i % 2] = im;
 
                 if (i % 2 == 1)
-                    gridPictureBox.Rows.Add(row);
+                    gridAFN.Rows.Add(row);
 
                 i++;
+            }
+        }
+
+        private void btnAFD_Click(object sender, EventArgs e)
+        {
+            btnRegex_Click(sender, e);
+            Object[] row = new Object[2];
+
+            gridAFN.Rows.Clear();
+            graphCreator.Symbols = grammar.PosfixList;
+            graphCreator.CreateAFDfromAFN();
+
+            pictureAFD.Image = graphCreator.Images.Values.Last();
+        }
+
+        private void materialTabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var index = ((MaterialTabControl)sender).SelectedIndex;
+            
+            switch(index)
+            {
+                case 4: CalculateFirst(); break;
             }
         }
     }

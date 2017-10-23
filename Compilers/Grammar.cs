@@ -94,6 +94,16 @@ namespace Compilers
                 Type = GrammarType.NO_TYPE;
         }
 
+        public List<Production> GetProductions(string coef)
+        {
+            List<Production> prod = new List<Production>();
+
+            foreach (var p in productions)
+                if (p.GetAlphaAsString().Equals(coef))
+                    prod.Add(p);
+
+            return prod;
+        }
 
         /**
          * Get type with user-friendly string

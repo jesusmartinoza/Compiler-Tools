@@ -19,7 +19,6 @@ namespace Compilers
      * */
     class GraphCreator
     {
-
         List<Symbol> symbols;
         SortedList<Int32, Image> images;
         List<GraphStruct> graphs;
@@ -107,6 +106,7 @@ namespace Compilers
                 i++;
             }
 
+            graphs.Last().Nodes.Sort();
             return true;
         }
 
@@ -196,6 +196,95 @@ namespace Compilers
                 .Add(AttributeStatement.Graph.Set("label", "Graph for " + title))
                 .Add(new EdgeStatement("1", "2", label.ToImmutable()));
         }
+        
+        public async Task CreateAFDfromAFN()
+        {
+            List<Int32> states = new List<Int32>();
+            List<Int32> markedIndex = new List<Int32>();
+            List<Edge> newEdges = new List<Edge>();
+            var singleSymb = symbols.GroupBy(s => s.Coef)
+                                        .Where(g => g.Count() == 1)
+                                        .Select(g => g.Key).ToArray();
+
+            List<Int32> init = new List<Int32>();
+            init.Add(graphs.Last().Nodes.First());
+
+            states.AddRange(EpsilonClosure(init));
+            
+            while(states.Count() > markedIndex.Count())
+            {
+                for(int i = markedIndex.Count(); i < states.Count; i++)
+                {
+                    if(!markedIndex.Contains(i))
+                    {
+                        markedIndex.Add(i);
+
+                        foreach(var s in singleSymb)
+                        {
+                            List<Int32> U = EpsilonClosure(Move(states, s)); ///
+
+                            if(U.Count() > 0)
+                            {
+                                if (!states.Any(U.Contains))
+                                {
+                                    states.AddRange(U);
+                                    newEdges.Add(new Edge(i, states.Count() - 1, s));
+                                }
+                                else
+                                {
+                                    newEdges.Add(new Edge(i, states.IndexOf(U.Count()), s)); ////
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            graphs.Add(new GraphStruct(states, newEdges));
+
+            await CreateGraphFromStackTop("AFD");
+        }
+
+        private List<Int32> Move(List<Int32> states, String symbol)
+        {
+            List<Int32> moved = new List<Int32>();
+
+            foreach(var s in states)
+            {
+                foreach (Edge e in graphs.Last().Edges)
+                {
+                    if (e.Origin == s && !moved.Contains(s) && e.Label == symbol)
+                        moved.Add(s);
+                }
+            }
+
+            return moved;
+        }
+
+        private List<Int32> EpsilonClosure(List<Int32> states)
+        {
+            List<Int32> closure = new List<Int32>();
+            closure.AddRange(states);
+
+            foreach(var s in states)
+            {
+                foreach(Edge e in graphs.Last().Edges)
+                {
+                    if(e.Origin == s && e.Label == "ε")
+                    {
+                        List<Int32> aux = new List<Int32>();
+                        aux.Add(e.Dest);
+                        List<Int32> newStates = EpsilonClosure(aux);
+
+                        foreach (var n in newStates)
+                            if (!closure.Contains(n))
+                                closure.Add(n);
+                    }
+                }
+            }
+
+            return closure;
+        }
 
         /**
          * Create image asynchronously from graph and add it to list when ready
@@ -214,6 +303,9 @@ namespace Compilers
             }
         }
 
+        /**
+         * Create image asynchronously from last graph in stack
+         * */
         private async Task CreateGraphFromStackTop(String title)
         {
             List<EdgeStatement> edges = new List<EdgeStatement>();

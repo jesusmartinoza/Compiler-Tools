@@ -133,6 +133,16 @@ namespace Compilers
             return recursionFound;
         }
 
+        public string GetAlphaAsString()
+        {
+            string str = "";
+
+            foreach (Symbol a in alpha)
+                str += a.Coef;
+
+            return str;
+        }
+
         /**
          * Print beta list in human way.
          * For example.
@@ -203,14 +213,7 @@ namespace Compilers
          * */
         public override string ToString()
         {
-            string str = "";
-
-            foreach(Symbol a in alpha)
-                str += a.Coef;
-
-            str += " -> " + GetBetaAsString();
-
-            return str;
+            return GetAlphaAsString() + " -> " + GetBetaAsString();
         }
     }
 }
