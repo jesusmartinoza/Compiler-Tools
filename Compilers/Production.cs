@@ -144,6 +144,14 @@ namespace Compilers
         }
 
         /**
+         * Return if first symbol of first list equals to Alpha
+         */
+        public Boolean IsLeftRecursive()
+        {
+            return GetAlphaAsString() == Beta[0][0].Coef;
+        }
+
+        /**
          * Print beta list in human way.
          * For example.
          * 

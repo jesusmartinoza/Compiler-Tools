@@ -23,6 +23,8 @@ namespace Compilers
     {
         private Grammar grammar;
         private GraphCreator graphCreator;
+        Dictionary<String, String> dicFirst = new Dictionary<String, String>();
+        Dictionary<String, String> dicNext = new Dictionary<String, String>();
 
         public MainForm()
         {
@@ -147,20 +149,48 @@ namespace Compilers
             }
         }
 
-        Dictionary<String, String> dic = new Dictionary<String, String>();
-        private void CalculateFirst()
+        private void CalculateNext()
         {
-            foreach(var p in grammar.Productions)
+            foreach (var p in grammar.Productions)
             {
-                if(!dic.ContainsKey(p.GetAlphaAsString()))
-                    dic.Add(p.GetAlphaAsString(), GetFirstOf(p));
-                else
-                    dic[p.GetAlphaAsString()] += ", " + GetFirstOf(p);
+                foreach(var list in p.Beta)
+                {
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        Symbol s = list[i];
+                        if (!s.IsTerminal())
+                        {
+                            if(i + 1 < list.Count)
+                            {
+                                var first = dicFirst[list[i + 1].Coef];
+                                dicNext.Add(p.GetAlphaAsString(), first.Replace("ε", ""));
+
+                                if (first.Contains("ε"))
+                                    break;
+                            }
+                        }
+                    }
+                }
             }
 
-            foreach(string s in dic.Values)
+        }
+
+        private void CalculateFirst()
+        {
+            listViewFirst.Items.Clear();
+            dicFirst.Clear();
+
+            foreach(var p in grammar.Productions)
             {
-                var listViewItem = new ListViewItem(s);
+                if(!dicFirst.ContainsKey(p.GetAlphaAsString()))
+                    dicFirst.Add(p.GetAlphaAsString(), GetFirstOf(p));
+                else
+                    dicFirst[p.GetAlphaAsString()] += ", " + GetFirstOf(p);
+            }
+
+            foreach(string k in dicFirst.Keys)
+            {
+                var listViewItem = new ListViewItem(k + "    { " + dicFirst[k] + " }");
                 listViewFirst.Items.Add(listViewItem);
             }
         }
@@ -177,13 +207,17 @@ namespace Compilers
                 var firstSymb = list[0];
                 if (firstSymb.IsTerminal())
                 {
-                    first += " " + firstSymb.Coef;
+                    first += firstSymb.Coef;
                     break;
                 }
                 else
                 {
                     foreach (var p2 in grammar.GetProductions(firstSymb.Coef))
-                        first += GetFirstOf(p2) + ", ";
+                        if (!p.IsLeftRecursive())
+                        {
+                            var res = GetFirstOf(p2);
+                            first += res == "," ? "" : res + ", ";
+                        }
 ;                }
             }
 
@@ -230,7 +264,7 @@ namespace Compilers
             
             switch(index)
             {
-                case 4: CalculateFirst(); break;
+                case 4: CalculateFirst(); /*CalculateNext(); */break;
             }
         }
     }
