@@ -148,46 +148,61 @@ namespace Compilers
             }
         }
 
-        private void CalculateNextOf(Production p)
+        private Boolean CalculateNextOf(Production p)
         {
             HashSet<String> next = new HashSet<String>();
+            Boolean changes = false;
 
             var list = p.Beta[0]; // Just first beta
-            var epsilonFound = false;
 
             for (int i = 0; i < list.Count; i++)
             {
                 Symbol s = list[i];
+
+                next.Clear();
                 if (!s.IsTerminal())
                 {
                     var selectedProd = grammar.Productions.Where(pr => pr.GetAlphaAsString() == s.Coef).First();
-                    HashSet<String> first = new HashSet<String>();
 
-                    for (int j = list.Count - 1; j > i; j--)
+                    if (i == list.Count - 1)
                     {
-                        var symb = list[j];
+                        var siblingProds = grammar.Productions.Where(pr => pr.GetAlphaAsString() == p.GetAlphaAsString());
 
-                        if(symb.IsTerminal())
-                            first.Add(symb.Coef);
-                        else
+                        foreach (var p2 in siblingProds)
+                            next.UnionWith(p2.Next);
+                    } else
+                    {
+                        HashSet<String> first = new HashSet<String>();
+
+                        for (int j = list.Count - 1; j > i; j--)
                         {
-                            var siblingProd = grammar.Productions.Where(pr => pr.GetAlphaAsString() == symb.Coef).First();
-                            first.UnionWith(siblingProd.First);
+                            var symb = list[j];
+
+                            if (symb.IsTerminal())
+                                first.Add(symb.Coef);
+                            else
+                            {
+                                var siblingProds = grammar.Productions.Where(pr => pr.GetAlphaAsString() == symb.Coef);
+
+                                foreach (var p2 in siblingProds)
+                                    first.UnionWith(GetFirstOf(p2));
+                            }
                         }
+
+                        if(first.Contains("ε"))
+                        {
+
+                        }
+                        next.UnionWith(first.Where(symb => symb != "ε"));
                     }
 
-                    epsilonFound = first.Contains("ε");
-                    next.UnionWith(first.Where(symb => symb != "ε"));
+                    changes = !selectedProd.Next.IsSupersetOf(next);
+
                     selectedProd.Next.UnionWith(next);
-
-                    if ( i == list.Count - 1 )
-                    {
-                        //next.UnionWith
-                    }
                 }
             }
 
-            if(next.Count == 0);
+            return changes;
         }
 
         private HashSet<String> GetFirstOf(Production p)
@@ -276,8 +291,19 @@ namespace Compilers
                     foreach (var p in grammar.Productions)
                         p.First = GetFirstOf(p);
 
-                    foreach (var p in grammar.Productions)
-                        CalculateNextOf(p);
+                    Boolean recalculate = false;
+
+                    // Calculate again if is there a change in one next set.
+                    do
+                    {
+                        recalculate = false;
+                        foreach (var p in grammar.Productions)
+                        {
+                            Boolean innerRec = CalculateNextOf(p);
+
+                            if (!recalculate) recalculate = innerRec;
+                        }
+                    } while (recalculate);
 
                     grammar.Simplify();
 

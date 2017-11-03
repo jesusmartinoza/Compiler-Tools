@@ -87,7 +87,7 @@
             this.tbGrammar.Name = "tbGrammar";
             this.tbGrammar.Size = new System.Drawing.Size(295, 163);
             this.tbGrammar.TabIndex = 0;
-            this.tbGrammar.Text = "A -> Aa | BCD\r\nB -> b | ε\r\nC -> c | ε\r\nD -> d | Ce";
+            this.tbGrammar.Text = "S -> xS\'\r\nS\' -> RS\' | ε\r\nR -> (S.R\r\nR -> )";
             // 
             // gpGrammar
             // 

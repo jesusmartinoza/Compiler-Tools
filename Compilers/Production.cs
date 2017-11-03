@@ -170,7 +170,7 @@ namespace Compilers
             {
                 str += s;
                 if (i-- > 1)
-                    str += ", ";
+                    str += "  ";
             }
 
             return str;
@@ -188,7 +188,7 @@ namespace Compilers
             {
                 str += s;
                 if (i-- > 1)
-                    str += ", ";
+                    str += "  ";
             }
 
             return str;
