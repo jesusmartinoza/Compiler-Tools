@@ -33,6 +33,9 @@ namespace Compilers
             grammar = new Grammar();
             graphCreator = new GraphCreator();
 
+            listViewFirst.Columns[0].Width = 65 - SystemInformation.VerticalScrollBarWidth;
+            listViewNext.Columns[0].Width = 65 - SystemInformation.VerticalScrollBarWidth;
+
             // Config material skin
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -163,42 +166,53 @@ namespace Compilers
                 if (!s.IsTerminal())
                 {
                     var selectedProd = grammar.Productions.Where(pr => pr.GetAlphaAsString() == s.Coef).First();
+                    HashSet<String> first = new HashSet<String>();
+
+                    // Get first of the next symbols
+                    for (int j = list.Count - 1; j > i; j--)
+                    {
+                        var symb = list[j];
+
+                        if (symb.IsTerminal())
+                            first.Add(symb.Coef);
+                        else
+                        {
+                            // Join FirstSet's productions with same Alpha
+                            var twinsProd = grammar.Productions.Where(pr => pr.GetAlphaAsString() == symb.Coef);
+                            Boolean allEpsilon = true;
+
+                            foreach (var p2 in twinsProd)
+                            {
+                                var p2First = GetFirstOf(p2);
+
+                                if (allEpsilon)
+                                    allEpsilon = p2First.Contains("ε");
+
+                                first.UnionWith(p2First);
+                            }
+                            
+                            if (!allEpsilon)
+                                first.Remove("ε");
+                        }
+                    }
 
                     if (i == list.Count - 1)
+                        first.Add("ε");
+
+                    if(first.Contains("ε"))
                     {
                         var siblingProds = grammar.Productions.Where(pr => pr.GetAlphaAsString() == p.GetAlphaAsString());
 
                         foreach (var p2 in siblingProds)
                             next.UnionWith(p2.Next);
-                    } else
-                    {
-                        HashSet<String> first = new HashSet<String>();
 
-                        for (int j = list.Count - 1; j > i; j--)
-                        {
-                            var symb = list[j];
-
-                            if (symb.IsTerminal())
-                                first.Add(symb.Coef);
-                            else
-                            {
-                                var siblingProds = grammar.Productions.Where(pr => pr.GetAlphaAsString() == symb.Coef);
-
-                                foreach (var p2 in siblingProds)
-                                    first.UnionWith(GetFirstOf(p2));
-                            }
-                        }
-
-                        if(first.Contains("ε"))
-                        {
-
-                        }
-                        next.UnionWith(first.Where(symb => symb != "ε"));
+                        selectedProd.Next.UnionWith(next);
                     }
 
-                    changes = !selectedProd.Next.IsSupersetOf(next);
-
+                    next.UnionWith(first.Where(symb => symb != "ε"));
                     selectedProd.Next.UnionWith(next);
+
+                    changes = !selectedProd.Next.IsSupersetOf(next);
                 }
             }
 
@@ -305,6 +319,7 @@ namespace Compilers
                         }
                     } while (recalculate);
 
+                    grammar.GeneratesSyntaxTable();
                     grammar.Simplify();
 
                     foreach (var p in grammar.Productions)

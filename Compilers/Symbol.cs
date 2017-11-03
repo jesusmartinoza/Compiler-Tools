@@ -83,7 +83,6 @@ namespace Compilers
 
         public string GetCleanCoef()
         {
-            // TMP
             string c = coef.Replace("{", "");
             c = coef.Replace("}", "");
             c = coef.Replace("(", "");

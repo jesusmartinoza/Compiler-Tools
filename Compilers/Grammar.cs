@@ -21,6 +21,7 @@ namespace Compilers
         List<Production> productions;
         GrammarType type;
         String regex;
+        String[,] syntaxTable;
 
         List<Symbol> posfixList;
         Stack<Symbol> stack;
@@ -409,6 +410,43 @@ namespace Compilers
                     }
                 }
             }
+        }
+
+        /**
+         * Generate syntax table based on First and Next sets
+         */
+        public String[,] GeneratesSyntaxTable()
+        {
+            List<String> nTerm = GetNonTerminals().Split(' ').ToList();
+            List<String> term = GetTerminals().Split(' ').ToList();
+
+            nTerm.Remove("");
+            term.Add("$");
+            term.Remove("");
+            term.Remove("ε");
+
+            String[,] table = new String[nTerm.Count, term.Count];
+
+            foreach(Production p in productions)
+            {
+                var first = p.First;
+                var next = p.Next;
+
+                foreach (var f in first)
+                    if (f != "ε")
+                        table[nTerm.IndexOf(p.GetAlphaAsString()), term.IndexOf(f)] = p.ToString();
+
+                if(first.Contains("ε"))
+                {
+                    foreach(var n in next)
+                        table[nTerm.IndexOf(p.GetAlphaAsString()), term.IndexOf(n)] = p.ToString();
+                }
+
+                if (first.Contains("ε") && next.Contains("$"))
+                    table[nTerm.IndexOf(p.GetAlphaAsString()), term.IndexOf("$")] = p.ToString();
+            }
+
+            return table;
         }
 
         /**
