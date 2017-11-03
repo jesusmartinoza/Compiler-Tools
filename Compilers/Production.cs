@@ -11,10 +11,14 @@ namespace Compilers
         string name;
         List<Symbol> alpha;
         List<List<Symbol>> beta;
+        HashSet<String> first;
+        HashSet<String> next;
 
         internal string Name { get => name; set => name = value; }
         internal List<Symbol> Alpha { get => alpha; set => alpha = value; }
         internal List<List<Symbol>> Beta { get => beta; set => beta = value; }
+        internal HashSet<String> Next { get => next; set => next = value; }
+        internal HashSet<String> First { get => first; set => first = value; }
 
         public Production(string name, List<Symbol> alpha, List<Symbol> beta)
         {
@@ -22,6 +26,8 @@ namespace Compilers
             this.alpha = alpha;
             this.beta = new List<List<Symbol>>();
             this.beta.Add(beta);
+            this.first = new HashSet<String>();
+            this.next = new HashSet<String>();
         }
 
         /**
@@ -151,12 +157,49 @@ namespace Compilers
             return GetAlphaAsString() == Beta[0][0].Coef;
         }
 
+
+        /**
+         * Print first list separated by commas
+         */
+        public string GetFirstAsString()
+        {
+            string str = "";
+
+            int i = first.Count;
+            foreach (var s in first)
+            {
+                str += s;
+                if (i-- > 1)
+                    str += ", ";
+            }
+
+            return str;
+        }
+
+        /**
+         * Print next list separated by commas
+         */
+        public string GetNextAsString()
+        {
+            string str = "";
+
+            int i = next.Count;
+            foreach (var s in next)
+            {
+                str += s;
+                if (i-- > 1)
+                    str += ", ";
+            }
+
+            return str;
+        }
+
         /**
          * Print beta list in human way.
          * For example.
          * 
          * aA | aB | C
-         * */
+         */
         public string GetBetaAsString()
         {
             string str = "";

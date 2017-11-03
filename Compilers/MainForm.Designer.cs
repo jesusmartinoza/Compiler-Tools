@@ -57,7 +57,7 @@
             this.btnAFD = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.materialListView1 = new MaterialSkin.Controls.MaterialListView();
+            this.listViewNext = new MaterialSkin.Controls.MaterialListView();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -87,7 +87,7 @@
             this.tbGrammar.Name = "tbGrammar";
             this.tbGrammar.Size = new System.Drawing.Size(295, 163);
             this.tbGrammar.TabIndex = 0;
-            this.tbGrammar.Text = "E -> TE\'\r\nE\' -> +TE\' | ε\r\nT -> FT\'\r\nT\' -> *FT\' | ε\r\nF -> (E) | i";
+            this.tbGrammar.Text = "A -> Aa | BCD\r\nB -> b | ε\r\nC -> c | ε\r\nD -> d | Ce";
             // 
             // gpGrammar
             // 
@@ -403,40 +403,44 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.materialListView1);
-            this.groupBox3.Location = new System.Drawing.Point(158, 3);
+            this.groupBox3.Controls.Add(this.listViewNext);
+            this.groupBox3.Location = new System.Drawing.Point(176, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(132, 267);
+            this.groupBox3.Size = new System.Drawing.Size(154, 267);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "NEXT";
             // 
-            // materialListView1
+            // listViewNext
             // 
-            this.materialListView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.materialListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listViewNext.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewNext.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader3,
             this.columnHeader4});
-            this.materialListView1.Depth = 0;
-            this.materialListView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
-            this.materialListView1.FullRowSelect = true;
-            this.materialListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.materialListView1.Location = new System.Drawing.Point(6, 19);
-            this.materialListView1.MouseLocation = new System.Drawing.Point(-1, -1);
-            this.materialListView1.MouseState = MaterialSkin.MouseState.OUT;
-            this.materialListView1.Name = "materialListView1";
-            this.materialListView1.OwnerDraw = true;
-            this.materialListView1.Size = new System.Drawing.Size(120, 242);
-            this.materialListView1.TabIndex = 1;
-            this.materialListView1.UseCompatibleStateImageBehavior = false;
-            this.materialListView1.View = System.Windows.Forms.View.Details;
+            this.listViewNext.Depth = 0;
+            this.listViewNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
+            this.listViewNext.FullRowSelect = true;
+            this.listViewNext.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewNext.Location = new System.Drawing.Point(6, 19);
+            this.listViewNext.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.listViewNext.MouseState = MaterialSkin.MouseState.OUT;
+            this.listViewNext.Name = "listViewNext";
+            this.listViewNext.OwnerDraw = true;
+            this.listViewNext.Size = new System.Drawing.Size(142, 242);
+            this.listViewNext.TabIndex = 1;
+            this.listViewNext.UseCompatibleStateImageBehavior = false;
+            this.listViewNext.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Width = 80;
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.listViewFirst);
             this.groupBox2.Location = new System.Drawing.Point(9, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(132, 267);
+            this.groupBox2.Size = new System.Drawing.Size(161, 267);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "FIRST";
@@ -456,10 +460,14 @@
             this.listViewFirst.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewFirst.Name = "listViewFirst";
             this.listViewFirst.OwnerDraw = true;
-            this.listViewFirst.Size = new System.Drawing.Size(120, 242);
+            this.listViewFirst.Size = new System.Drawing.Size(149, 242);
             this.listViewFirst.TabIndex = 1;
             this.listViewFirst.UseCompatibleStateImageBehavior = false;
             this.listViewFirst.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Width = 85;
             // 
             // materialTabSelector
             // 
@@ -541,7 +549,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private MaterialSkin.Controls.MaterialListView materialListView1;
+        private MaterialSkin.Controls.MaterialListView listViewNext;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
     }

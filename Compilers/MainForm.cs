@@ -23,7 +23,6 @@ namespace Compilers
     {
         private Grammar grammar;
         private GraphCreator graphCreator;
-        Dictionary<String, String> dicFirst = new Dictionary<String, String>();
         Dictionary<String, String> dicNext = new Dictionary<String, String>();
 
         public MainForm()
@@ -149,76 +148,77 @@ namespace Compilers
             }
         }
 
-        private void CalculateNext()
+        private void CalculateNextOf(Production p)
         {
-            foreach (var p in grammar.Productions)
-            {
-                foreach(var list in p.Beta)
-                {
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        Symbol s = list[i];
-                        if (!s.IsTerminal())
-                        {
-                            if(i + 1 < list.Count)
-                            {
-                                var first = dicFirst[list[i + 1].Coef];
-                                dicNext.Add(p.GetAlphaAsString(), first.Replace("ε", ""));
+            HashSet<String> next = new HashSet<String>();
 
-                                if (first.Contains("ε"))
-                                    break;
-                            }
+            var list = p.Beta[0]; // Just first beta
+            var epsilonFound = false;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                Symbol s = list[i];
+                if (!s.IsTerminal())
+                {
+                    var selectedProd = grammar.Productions.Where(pr => pr.GetAlphaAsString() == s.Coef).First();
+                    HashSet<String> first = new HashSet<String>();
+
+                    for (int j = list.Count - 1; j > i; j--)
+                    {
+                        var symb = list[j];
+
+                        if(symb.IsTerminal())
+                            first.Add(symb.Coef);
+                        else
+                        {
+                            var siblingProd = grammar.Productions.Where(pr => pr.GetAlphaAsString() == symb.Coef).First();
+                            first.UnionWith(siblingProd.First);
                         }
+                    }
+
+                    epsilonFound = first.Contains("ε");
+                    next.UnionWith(first.Where(symb => symb != "ε"));
+                    selectedProd.Next.UnionWith(next);
+
+                    if ( i == list.Count - 1 )
+                    {
+                        //next.UnionWith
                     }
                 }
             }
 
+            if(next.Count == 0);
         }
 
-        private void CalculateFirst()
+        private HashSet<String> GetFirstOf(Production p)
         {
-            listViewFirst.Items.Clear();
-            dicFirst.Clear();
-
-            foreach(var p in grammar.Productions)
-            {
-                if(!dicFirst.ContainsKey(p.GetAlphaAsString()))
-                    dicFirst.Add(p.GetAlphaAsString(), GetFirstOf(p));
-                else
-                    dicFirst[p.GetAlphaAsString()] += ", " + GetFirstOf(p);
-            }
-
-            foreach(string k in dicFirst.Keys)
-            {
-                var listViewItem = new ListViewItem(k + "    { " + dicFirst[k] + " }");
-                listViewFirst.Items.Add(listViewItem);
-            }
-        }
-
-        private String GetFirstOf(Production p)
-        {
-            var first = "";
-
-            if (p == null)
+            HashSet<String> first = new HashSet<String>();
+     
+            if (p.IsLeftRecursive())
                 return first;
-
-            foreach (var list in p.Beta)
+            
+            foreach (var s in p.Beta[0]) 
             {
-                var firstSymb = list[0];
-                if (firstSymb.IsTerminal())
+                if (!s.IsTerminal())
                 {
-                    first += firstSymb.Coef;
-                    break;
+                    var productions = grammar.GetProductions(s.Coef); // Get productions where Alpha equals s
+                    var firstOfS = new HashSet<String>();
+
+                    foreach (var p2 in productions)
+                    {
+                        firstOfS.UnionWith(GetFirstOf(p2));
+                    }
+
+                    first.UnionWith(firstOfS.Where(symb => symb != "ε"));
+
+                    if (!firstOfS.Contains("ε")) // continue only when contains
+                        return first;
                 }
                 else
                 {
-                    foreach (var p2 in grammar.GetProductions(firstSymb.Coef))
-                        if (!p.IsLeftRecursive())
-                        {
-                            var res = GetFirstOf(p2);
-                            first += res == "," ? "" : res + ", ";
-                        }
-;                }
+                    first.Add(s.Coef);
+                    return first;
+                }
             }
 
             return first;
@@ -264,7 +264,33 @@ namespace Compilers
             
             switch(index)
             {
-                case 4: CalculateFirst(); /*CalculateNext(); */break;
+                case 4: // First/Next tab
+                    listViewFirst.Items.Clear();
+                    listViewNext.Items.Clear();
+
+                    // Add initial symbol to first production
+                    if(grammar.Productions.Count > 0)
+                        grammar.Productions.First().Next.Add("$");
+
+                    // First calculate set of first 
+                    foreach (var p in grammar.Productions)
+                        p.First = GetFirstOf(p);
+
+                    foreach (var p in grammar.Productions)
+                        CalculateNextOf(p);
+
+                    grammar.Simplify();
+
+                    foreach (var p in grammar.Productions)
+                    {
+                        var listViewItem = new ListViewItem(p.GetAlphaAsString() + "    {  " + p.GetFirstAsString() + "  }");
+                        listViewFirst.Items.Add(listViewItem);
+
+                        listViewItem = new ListViewItem(p.GetAlphaAsString() + "    {  " + p.GetNextAsString() + "  }");
+                        listViewNext.Items.Add(listViewItem);
+                    }
+
+                    break;
             }
         }
     }

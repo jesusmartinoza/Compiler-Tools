@@ -214,6 +214,8 @@ namespace Compilers
                     {
                         burnedIndex.Add(j);
                         prodA.Beta.AddRange(prodB.Beta);
+                        prodA.First.UnionWith(prodB.First);
+                        prodA.Next.UnionWith(prodB.Next);
                     }
                 }
 
