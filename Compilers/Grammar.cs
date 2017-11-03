@@ -448,10 +448,8 @@ namespace Compilers
                         syntaxTable[nTerm.IndexOf(p.GetAlphaAsString()) + 1, term.IndexOf(f) + 1] = p.ToString();
 
                 if(first.Contains("ε"))
-                {
                     foreach(var n in next)
                         syntaxTable[nTerm.IndexOf(p.GetAlphaAsString()) + 1, term.IndexOf(n) + 1] = p.ToString();
-                }
 
                 if (first.Contains("ε") && next.Contains("$"))
                     syntaxTable[nTerm.IndexOf(p.GetAlphaAsString()) + 1, term.IndexOf("$")  + 1] = p.ToString();

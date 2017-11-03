@@ -149,9 +149,6 @@ namespace Compilers
             for (int i = 1; i < table.GetLength(1); i++)
                 listViewSyntaxisTable.Columns.Add(table[0, i], 100);
 
-            foreach (ColumnHeader c in listViewSyntaxisTable.Columns)
-                c.TextAlign = HorizontalAlignment.Center;
-
             // Populate table
             for (int i = 1; i < table.GetLength(0); i++)
             {
@@ -224,7 +221,11 @@ namespace Compilers
                     }
 
                     next.UnionWith(first.Where(symb => symb != "ε"));
-                    selectedProd.Next.UnionWith(next);
+
+                    // Add next to every alpha selectedProduction
+                    var similarProd = grammar.Productions.Where(pr => pr.GetAlphaAsString() == selectedProd.GetAlphaAsString());
+                    foreach(var sP in similarProd)
+                        sP.Next.UnionWith(next);
 
                     changes = !selectedProd.Next.IsSupersetOf(next);
                 }
@@ -317,7 +318,14 @@ namespace Compilers
 
                     // First calculate set of first 
                     foreach (var p in grammar.Productions)
+                    {
                         p.First = GetFirstOf(p);
+                        // Add first to every alpha selectedProduction
+                        var similarProd = grammar.Productions.Where(pr => pr.GetAlphaAsString() == p.GetAlphaAsString());
+
+                        foreach (var sP in similarProd)
+                            sP.First.UnionWith(p.First);
+                    }
 
                     Boolean recalculate = false;
 

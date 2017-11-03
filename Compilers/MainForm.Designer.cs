@@ -417,17 +417,19 @@
             // 
             // listViewSyntaxisTable
             // 
+            this.listViewSyntaxisTable.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid;
+            this.listViewSyntaxisTable.AutoArrange = false;
             this.listViewSyntaxisTable.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewSyntaxisTable.Depth = 0;
             this.listViewSyntaxisTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.listViewSyntaxisTable.FullRowSelect = true;
             this.listViewSyntaxisTable.GridLines = true;
             this.listViewSyntaxisTable.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listViewSyntaxisTable.LabelWrap = false;
             this.listViewSyntaxisTable.Location = new System.Drawing.Point(6, 19);
             this.listViewSyntaxisTable.MouseLocation = new System.Drawing.Point(-1, -1);
             this.listViewSyntaxisTable.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewSyntaxisTable.Name = "listViewSyntaxisTable";
-            this.listViewSyntaxisTable.OwnerDraw = true;
             this.listViewSyntaxisTable.Size = new System.Drawing.Size(458, 279);
             this.listViewSyntaxisTable.TabIndex = 1;
             this.listViewSyntaxisTable.UseCompatibleStateImageBehavior = false;
