@@ -1,21 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
-using Shields.GraphViz.Models;
-using System.IO;
-using System.Threading;
-using Shields.GraphViz.Services;
-using Shields.GraphViz.Components;
-using System.Collections.Immutable;
 
 namespace Compilers
 {
@@ -32,7 +21,7 @@ namespace Compilers
 
             grammar = new Grammar();
             graphCreator = new GraphCreator();
-
+            
             listViewFirst.Columns[0].Width = 65 - SystemInformation.VerticalScrollBarWidth;
             listViewNext.Columns[0].Width = 65 - SystemInformation.VerticalScrollBarWidth;
 
@@ -148,6 +137,31 @@ namespace Compilers
 
                 textBoxRegexLog.Text += "\r\n\r\nConvert to posfix\r\n";
                 textBoxRegexLog.Text += grammar.ConvertToPosfix();
+            }
+        }
+
+        private void FillFirstNextSyntaxTable()
+        {
+            String[,] table = grammar.SyntaxTable;
+
+            // Create columns
+            listViewSyntaxisTable.Columns.Add("Non Terminal", 120);
+            for (int i = 1; i < table.GetLength(1); i++)
+                listViewSyntaxisTable.Columns.Add(table[0, i], 100);
+
+            foreach (ColumnHeader c in listViewSyntaxisTable.Columns)
+                c.TextAlign = HorizontalAlignment.Center;
+
+            // Populate table
+            for (int i = 1; i < table.GetLength(0); i++)
+            {
+                String[] row = new String[table.GetLength(1)];
+
+                for (int j = 0; j < table.GetLength(1); j++)
+                    row[j] = table[i, j];
+                
+                var listViewItem = new ListViewItem(row);
+                listViewSyntaxisTable.Items.Add(listViewItem);
             }
         }
 
@@ -319,7 +333,8 @@ namespace Compilers
                         }
                     } while (recalculate);
 
-                    grammar.GeneratesSyntaxTable();
+                    grammar.GeneratesSyntaxTableFromFirstNext();
+                    FillFirstNextSyntaxTable();
                     grammar.Simplify();
 
                     foreach (var p in grammar.Productions)

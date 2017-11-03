@@ -30,6 +30,7 @@ namespace Compilers
         internal GrammarType Type { get => type; set => type = value; }
         internal string Regex { get => regex; set => regex = value; }
         internal List<Symbol> PosfixList { get => posfixList; set => posfixList = value; }
+        public string[,] SyntaxTable { get => syntaxTable; set => syntaxTable = value; }
 
         public Grammar()
         {
@@ -415,7 +416,7 @@ namespace Compilers
         /**
          * Generate syntax table based on First and Next sets
          */
-        public String[,] GeneratesSyntaxTable()
+        public void GeneratesSyntaxTableFromFirstNext()
         {
             List<String> nTerm = GetNonTerminals().Split(' ').ToList();
             List<String> term = GetTerminals().Split(' ').ToList();
@@ -425,28 +426,36 @@ namespace Compilers
             term.Remove("");
             term.Remove("ε");
 
-            String[,] table = new String[nTerm.Count, term.Count];
+            syntaxTable = new String[nTerm.Count + 1, term.Count + 1];
 
-            foreach(Production p in productions)
+            // Column headers
+            int i = 1;
+            foreach (var t in term)
+                syntaxTable[0, i++] = t;
+
+            // First column
+            i = 1;
+            foreach (var nT in nTerm)
+                syntaxTable[i++, 0] = nT;
+
+            foreach (Production p in productions)
             {
                 var first = p.First;
                 var next = p.Next;
 
                 foreach (var f in first)
                     if (f != "ε")
-                        table[nTerm.IndexOf(p.GetAlphaAsString()), term.IndexOf(f)] = p.ToString();
+                        syntaxTable[nTerm.IndexOf(p.GetAlphaAsString()) + 1, term.IndexOf(f) + 1] = p.ToString();
 
                 if(first.Contains("ε"))
                 {
                     foreach(var n in next)
-                        table[nTerm.IndexOf(p.GetAlphaAsString()), term.IndexOf(n)] = p.ToString();
+                        syntaxTable[nTerm.IndexOf(p.GetAlphaAsString()) + 1, term.IndexOf(n) + 1] = p.ToString();
                 }
 
                 if (first.Contains("ε") && next.Contains("$"))
-                    table[nTerm.IndexOf(p.GetAlphaAsString()), term.IndexOf("$")] = p.ToString();
+                    syntaxTable[nTerm.IndexOf(p.GetAlphaAsString()) + 1, term.IndexOf("$")  + 1] = p.ToString();
             }
-
-            return table;
         }
 
         /**

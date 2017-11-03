@@ -88,7 +88,7 @@
             this.tbGrammar.Location = new System.Drawing.Point(9, 64);
             this.tbGrammar.Multiline = true;
             this.tbGrammar.Name = "tbGrammar";
-            this.tbGrammar.Size = new System.Drawing.Size(295, 163);
+            this.tbGrammar.Size = new System.Drawing.Size(295, 177);
             this.tbGrammar.TabIndex = 0;
             this.tbGrammar.Text = "S -> xS\'\r\nS\' -> RS\' | ε\r\nR -> (S.R\r\nR -> )\r\n";
             // 
@@ -98,9 +98,9 @@
             this.gpGrammar.Controls.Add(this.btnProductions);
             this.gpGrammar.Controls.Add(this.lblGrammarInfo);
             this.gpGrammar.Controls.Add(this.tbGrammar);
-            this.gpGrammar.Location = new System.Drawing.Point(18, 11);
+            this.gpGrammar.Location = new System.Drawing.Point(15, 15);
             this.gpGrammar.Name = "gpGrammar";
-            this.gpGrammar.Size = new System.Drawing.Size(313, 276);
+            this.gpGrammar.Size = new System.Drawing.Size(313, 302);
             this.gpGrammar.TabIndex = 2;
             this.gpGrammar.TabStop = false;
             this.gpGrammar.Text = "Grammar";
@@ -111,7 +111,7 @@
             this.btnInsterEpsilon.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnInsterEpsilon.Depth = 0;
             this.btnInsterEpsilon.Icon = null;
-            this.btnInsterEpsilon.Location = new System.Drawing.Point(51, 234);
+            this.btnInsterEpsilon.Location = new System.Drawing.Point(51, 250);
             this.btnInsterEpsilon.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnInsterEpsilon.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnInsterEpsilon.Name = "btnInsterEpsilon";
@@ -128,7 +128,7 @@
             this.btnProductions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnProductions.Depth = 0;
             this.btnProductions.Icon = null;
-            this.btnProductions.Location = new System.Drawing.Point(137, 234);
+            this.btnProductions.Location = new System.Drawing.Point(137, 250);
             this.btnProductions.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnProductions.Name = "btnProductions";
             this.btnProductions.Primary = true;
@@ -155,9 +155,9 @@
             this.gpResult.Controls.Add(this.labelTerminal);
             this.gpResult.Controls.Add(this.labelTitle2);
             this.gpResult.Controls.Add(this.labelTitle1);
-            this.gpResult.Location = new System.Drawing.Point(347, 11);
+            this.gpResult.Location = new System.Drawing.Point(344, 15);
             this.gpResult.Name = "gpResult";
-            this.gpResult.Size = new System.Drawing.Size(313, 276);
+            this.gpResult.Size = new System.Drawing.Size(313, 302);
             this.gpResult.TabIndex = 3;
             this.gpResult.TabStop = false;
             this.gpResult.Text = "Result";
@@ -421,7 +421,8 @@
             this.listViewSyntaxisTable.Depth = 0;
             this.listViewSyntaxisTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.listViewSyntaxisTable.FullRowSelect = true;
-            this.listViewSyntaxisTable.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewSyntaxisTable.GridLines = true;
+            this.listViewSyntaxisTable.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewSyntaxisTable.Location = new System.Drawing.Point(6, 19);
             this.listViewSyntaxisTable.MouseLocation = new System.Drawing.Point(-1, -1);
             this.listViewSyntaxisTable.MouseState = MaterialSkin.MouseState.OUT;
@@ -498,6 +499,7 @@
             // 
             // columnHeader2
             // 
+            this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader2.Width = 80;
             // 
             // materialTabSelector
