@@ -38,6 +38,11 @@ namespace Compilers
             }
         }
 
+        public Boolean IsEpsilon()
+        {
+            return coef == "ε";
+        }
+
         public Symbol(string coef)
         {
             this.coef = coef;
@@ -81,6 +86,9 @@ namespace Compilers
             }
         } 
 
+        /**
+         * Get Coef without brackets or parenthesis
+         */
         public string GetCleanCoef()
         {
             string c = coef.Replace("{", "");

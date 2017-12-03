@@ -66,7 +66,12 @@
             this.listViewFirst = new MaterialSkin.Controls.MaterialListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.btnTestFirstNext = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBoxTestString = new System.Windows.Forms.TextBox();
             this.materialTabSelector = new MaterialSkin.Controls.MaterialTabSelector();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.gpGrammar.SuspendLayout();
             this.gpResult.SuspendLayout();
             this.materialTabControl1.SuspendLayout();
@@ -81,6 +86,7 @@
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbGrammar
@@ -220,6 +226,7 @@
             this.materialTabControl1.Controls.Add(this.tabPage3);
             this.materialTabControl1.Controls.Add(this.tabPage4);
             this.materialTabControl1.Controls.Add(this.tabPage5);
+            this.materialTabControl1.Controls.Add(this.tabPage6);
             this.materialTabControl1.Depth = 0;
             this.materialTabControl1.Location = new System.Drawing.Point(-1, 101);
             this.materialTabControl1.MouseState = MaterialSkin.MouseState.HOVER;
@@ -248,7 +255,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(666, 287);
+            this.tabPage2.Size = new System.Drawing.Size(666, 302);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Regex";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -297,7 +304,7 @@
             this.tabPage3.Controls.Add(this.btnAFN);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(666, 287);
+            this.tabPage3.Size = new System.Drawing.Size(666, 302);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "AFN";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -363,7 +370,7 @@
             this.tabPage4.Controls.Add(this.btnAFD);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(666, 287);
+            this.tabPage4.Size = new System.Drawing.Size(666, 302);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "AFD";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -430,6 +437,7 @@
             this.listViewSyntaxisTable.MouseLocation = new System.Drawing.Point(-1, -1);
             this.listViewSyntaxisTable.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewSyntaxisTable.Name = "listViewSyntaxisTable";
+            this.listViewSyntaxisTable.OwnerDraw = true;
             this.listViewSyntaxisTable.Size = new System.Drawing.Size(458, 279);
             this.listViewSyntaxisTable.TabIndex = 1;
             this.listViewSyntaxisTable.UseCompatibleStateImageBehavior = false;
@@ -504,6 +512,52 @@
             this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader2.Width = 80;
             // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.textBox1);
+            this.tabPage6.Controls.Add(this.btnTestFirstNext);
+            this.tabPage6.Controls.Add(this.label1);
+            this.tabPage6.Controls.Add(this.textBoxTestString);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(666, 302);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Syntaxis Analyzer";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // btnTestFirstNext
+            // 
+            this.btnTestFirstNext.AutoSize = true;
+            this.btnTestFirstNext.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnTestFirstNext.Depth = 0;
+            this.btnTestFirstNext.Icon = null;
+            this.btnTestFirstNext.Location = new System.Drawing.Point(241, 62);
+            this.btnTestFirstNext.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnTestFirstNext.Name = "btnTestFirstNext";
+            this.btnTestFirstNext.Primary = true;
+            this.btnTestFirstNext.Size = new System.Drawing.Size(177, 36);
+            this.btnTestFirstNext.TabIndex = 4;
+            this.btnTestFirstNext.Text = "Test using First/Next";
+            this.btnTestFirstNext.UseVisualStyleBackColor = true;
+            this.btnTestFirstNext.Click += new System.EventHandler(this.btnTestFirstNext_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(295, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(66, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "String to test";
+            // 
+            // textBoxTestString
+            // 
+            this.textBoxTestString.Location = new System.Drawing.Point(224, 36);
+            this.textBoxTestString.Name = "textBoxTestString";
+            this.textBoxTestString.Size = new System.Drawing.Size(213, 20);
+            this.textBoxTestString.TabIndex = 0;
+            this.textBoxTestString.Text = "x(x.(x.))";
+            // 
             // materialTabSelector
             // 
             this.materialTabSelector.BaseTabControl = this.materialTabControl1;
@@ -514,6 +568,14 @@
             this.materialTabSelector.Size = new System.Drawing.Size(673, 37);
             this.materialTabSelector.TabIndex = 5;
             this.materialTabSelector.Text = "materialTabSelector1";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(152, 104);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(344, 189);
+            this.textBox1.TabIndex = 5;
             // 
             // MainForm
             // 
@@ -546,6 +608,8 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -590,6 +654,11 @@
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.GroupBox groupBox4;
         private MaterialSkin.Controls.MaterialListView listViewSyntaxisTable;
+        private System.Windows.Forms.TabPage tabPage6;
+        private MaterialSkin.Controls.MaterialRaisedButton btnTestFirstNext;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBoxTestString;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

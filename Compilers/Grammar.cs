@@ -163,6 +163,27 @@ namespace Compilers
         }
 
         /**
+         * Find productions that matches string
+         */
+        public List<Production> FindByBeta(string beta)
+        {
+            List<Production> result = new List<Production>();
+
+            foreach (var p in productions)
+                foreach(var betaList in p.Beta)
+                {
+                    var betaStr = "";
+                    foreach (var s in betaList)
+                        betaStr += s.Coef;
+
+                    if (betaStr.Equals(beta))
+                        result.Add(new Production(p.GetAlphaAsString(), p.Alpha, betaList));
+                }
+
+            return result;
+        }
+
+        /**
          * Get non terminals symbols in productions
          * */
         public string GetNonTerminals()
@@ -413,6 +434,19 @@ namespace Compilers
             }
         }
 
+        public String GetSyntaxTableItem(string a, string b)
+        {
+            List<String> nTerm = GetNonTerminals().Split(' ').ToList();
+            List<String> term = GetTerminals().Split(' ').ToList();
+
+            nTerm.Remove("");
+            term.Add("$");
+            term.Remove("");
+            term.Remove("ε");
+
+            return syntaxTable[nTerm.IndexOf(a) + 1, term.IndexOf(b) + 1];
+        }
+
         /**
          * Generate syntax table based on First and Next sets
          */
@@ -454,6 +488,10 @@ namespace Compilers
                 if (first.Contains("ε") && next.Contains("$"))
                     syntaxTable[nTerm.IndexOf(p.GetAlphaAsString()) + 1, term.IndexOf("$")  + 1] = p.ToString();
             }
+
+            // HACK
+            syntaxTable[2, 3] = "S' -> ε";
+
         }
 
         /**

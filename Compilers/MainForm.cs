@@ -309,11 +309,13 @@ namespace Compilers
             switch(index)
             {
                 case 4: // First/Next tab
+                    OnBtnProductions_Click(sender, e);
                     listViewFirst.Items.Clear();
                     listViewNext.Items.Clear();
+                    listViewSyntaxisTable.Clear();
 
                     // Add initial symbol to first production
-                    if(grammar.Productions.Count > 0)
+                    if (grammar.Productions.Count > 0)
                         grammar.Productions.First().Next.Add("$");
 
                     // First calculate set of first 
@@ -356,6 +358,71 @@ namespace Compilers
 
                     break;
             }
+        }
+
+        private void btnTestFirstNext_Click(object sender, EventArgs e)
+        {
+
+            String test = textBoxTestString.Text + "$";
+            Stack<Symbol> stack = new Stack<Symbol>();
+            int strPtr = 0;
+            Boolean errorFound = false;
+
+            stack.Push(new Symbol("$"));
+            stack.Push(grammar.Productions[0].Alpha[0]);
+            textBox1.Text = "";
+            do
+            {
+                var foo = "";
+                foreach (Symbol s in stack.Reverse())
+                    foo += s.Coef;
+                textBox1.Text += foo + "    " + test.Substring(strPtr);
+
+                Symbol top = stack.Peek();
+                char testChar = test[strPtr];
+
+                if (top.IsTerminal() || top.Coef == "$")
+                {
+                    if(top.Coef == testChar.ToString())
+                    {
+                        stack.Pop();
+                        strPtr++;
+                    }
+                    else
+                    {
+                        errorFound = true;
+                        MessageBox.Show("Error en X");
+                    }
+                } else
+                {
+                    String prodStr = grammar.GetSyntaxTableItem(top.Coef, testChar.ToString());
+
+                    if (!String.IsNullOrEmpty(prodStr))
+                    {
+                        String alpha = Utils.GetUntilOrEmpty(prodStr, "->").Trim();
+                        String beta = prodStr.Substring(prodStr.LastIndexOf("-") + 2).Trim();
+                        var prod = grammar.FindByBeta(beta).First();
+                        
+                        stack.Pop();
+
+                        for (int i = prod.Beta[0].Count - 1; i >= 0; i--)
+                            if(!prod.Beta[0][i].IsEpsilon())
+                                stack.Push(prod.Beta[0][i]);
+
+                        textBox1.Text += "    " + alpha + "->" + beta;
+                    }
+                    else
+                    {
+                        errorFound = true;
+                        MessageBox.Show("Error al emitir produccion");
+                    }
+                }
+                
+                textBox1.Text += "\r\n";
+            } while (stack.Peek().Coef != "$" && !errorFound);
+
+            if (!errorFound)
+                MessageBox.Show("Syntactically valid string!!");
         }
     }
 }
