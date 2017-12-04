@@ -194,7 +194,7 @@ namespace Compilers
 
                             foreach (var p2 in twinsProd)
                             {
-                                var p2First = GetFirstOf(p2);
+                                var p2First = grammar.GetFirstOf(p2);
 
                                 if (allEpsilon)
                                     allEpsilon = p2First.Contains("ε");
@@ -234,40 +234,6 @@ namespace Compilers
             return changes;
         }
 
-        private HashSet<String> GetFirstOf(Production p)
-        {
-            HashSet<String> first = new HashSet<String>();
-     
-            if (p.IsLeftRecursive())
-                return first;
-            
-            foreach (var s in p.Beta[0]) 
-            {
-                if (!s.IsTerminal())
-                {
-                    var productions = grammar.GetProductions(s.Coef); // Get productions where Alpha equals s
-                    var firstOfS = new HashSet<String>();
-
-                    foreach (var p2 in productions)
-                    {
-                        firstOfS.UnionWith(GetFirstOf(p2));
-                    }
-
-                    first.UnionWith(firstOfS.Where(symb => symb != "ε"));
-
-                    if (!firstOfS.Contains("ε")) // continue only when contains
-                        return first;
-                }
-                else
-                {
-                    first.Add(s.Coef);
-                    return first;
-                }
-            }
-
-            return first;
-        }
-
         private async void btnAFN_Click(object sender, EventArgs e)
         {
             btnRegex_Click(sender, e);
@@ -290,25 +256,13 @@ namespace Compilers
             }
         }
 
-        private void btnAFD_Click(object sender, EventArgs e)
-        {
-            btnRegex_Click(sender, e);
-            Object[] row = new Object[2];
-
-            gridAFN.Rows.Clear();
-            graphCreator.Symbols = grammar.PosfixList;
-            graphCreator.CreateAFDfromAFN();
-
-            pictureAFD.Image = graphCreator.Images.Values.Last();
-        }
-
         private void materialTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             var index = ((MaterialTabControl)sender).SelectedIndex;
             
             switch(index)
             {
-                case 4: // First/Next tab
+                case 3: // First/Next tab
                     OnBtnProductions_Click(sender, e);
                     listViewFirst.Items.Clear();
                     listViewNext.Items.Clear();
@@ -321,7 +275,7 @@ namespace Compilers
                     // First calculate set of first 
                     foreach (var p in grammar.Productions)
                     {
-                        p.First = GetFirstOf(p);
+                        p.First = grammar.GetFirstOf(p);
                         // Add first to every alpha selectedProduction
                         var similarProd = grammar.Productions.Where(pr => pr.GetAlphaAsString() == p.GetAlphaAsString());
 
@@ -362,6 +316,11 @@ namespace Compilers
 
         private void btnTestFirstNext_Click(object sender, EventArgs e)
         {
+            if(grammar.Productions.Count == 0)
+            {
+                MessageBox.Show("You must need to calculate FIRST/NEXT table");
+                return;
+            }
 
             String test = textBoxTestString.Text + "$";
             Stack<Symbol> stack = new Stack<Symbol>();
@@ -423,6 +382,11 @@ namespace Compilers
 
             if (!errorFound)
                 MessageBox.Show("Syntactically valid string!!");
+        }
+
+        private void btnTestLR1_Click(object sender, EventArgs e)
+        {
+            grammar.LR1();
         }
     }
 }

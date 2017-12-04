@@ -195,6 +195,70 @@ namespace Compilers
         }
 
         /**
+         * Add initial dot to beta
+         */
+        public Production AddInitialDot()
+        {
+            Boolean canInsert = true;
+
+            foreach (var symb in beta[0])
+                if (symb.Coef == "·")
+                    canInsert = false;
+
+            if(canInsert || true)
+                beta[0].Insert(0, new Symbol('·'));
+
+            return this;
+        }
+
+        /**
+         * Get symbol using Dot as anchor
+         */
+        public Symbol GetSymbolFromDot(int offset)
+        {
+            Symbol symb = new Symbol("");
+            var index = IndexOfSymbol("·");
+
+            if (index != -1 && index + offset < beta[0].Count && index + offset >= 0)
+                return new Symbol(beta[0][index + offset].Coef);
+
+            return symb;
+        }
+
+        /**
+         * Return new Production with the dot shifted to the right.
+         */
+        public Production GetShifted()
+        {
+            Production prod = new Production(name, new List<Symbol>(alpha), new List<Symbol>(beta[0]));
+            var index = IndexOfSymbol("·");
+
+            if (index != -1 && index + 1 < beta[0].Count)
+            {
+                prod.beta[0].Insert(index, prod.beta[0][index + 1]);
+                prod.beta[0].RemoveAt(index + 2);
+            }
+
+            return prod;
+        }
+
+        /**
+         * Search the given symbol in BETA
+         */
+        public int IndexOfSymbol(String coef)
+        {
+            int index = -1;
+
+            foreach(Symbol symb in beta[0])
+            {
+                if (symb.Coef == coef)
+                    return beta[0].IndexOf(symb);
+            }
+
+            return index;
+        }
+
+        /**
          * Print beta list in human way.
          * For example.
          * 
@@ -265,6 +329,31 @@ namespace Compilers
         public override string ToString()
         {
             return GetAlphaAsString() + " -> " + GetBetaAsString();
+        }
+
+        /**
+         * Compare Alpha and Beta
+         */
+        public override bool Equals(object obj)
+        {
+            Production pro = (Production)obj;
+            Boolean equals = pro.Alpha.Count == Alpha.Count && pro.Beta.Count == Beta.Count ; // Compare Alpha and Beta lengths
+
+            if(equals)
+            {
+                // Compare item by item of Alpha
+                for (var i = 0; i < Alpha.Count && equals; i++)
+                    if (Alpha[i].Coef != pro.Alpha[i].Coef)
+                        equals = false;
+
+                // Compare item by item of Beta
+                for (var i = 0; i < Beta.Count && equals; i++)
+                    for (var j = 0; j < Beta[i].Count && equals; j++)
+                        if (Beta[i][j].Coef != pro.Beta[i][j].Coef)
+                            equals = false;
+            }
+
+            return equals;
         }
     }
 }

@@ -38,14 +38,19 @@ namespace Compilers
             }
         }
 
+        public Symbol(string coef)
+        {
+            this.coef = coef;
+        }
+
         public Boolean IsEpsilon()
         {
             return coef == "ε";
         }
 
-        public Symbol(string coef)
+        public Boolean IsDot()
         {
-            this.coef = coef;
+            return coef == "·";
         }
 
         /**
@@ -55,7 +60,7 @@ namespace Compilers
         {
             int n;
             
-            return IsOperator() || coef.All(char.IsLower) || Int32.TryParse(coef, out n);
+            return IsOperator() || coef.All(char.IsLower) || Int32.TryParse(coef, out n) || coef == "$";
         }
 
         /**
@@ -105,7 +110,7 @@ namespace Compilers
 
         public Boolean IsOperator()
         {
-            return coef == "(" || coef == ")" || coef == "|" || coef == "." || coef == "+" || coef == "*";
+            return coef == "(" || coef == ")" || coef == "|" || coef == "." || coef == "+" || coef == "*" || coef == "=";
         }
 
         public Boolean IsBinaryOperator()

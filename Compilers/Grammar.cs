@@ -248,6 +248,22 @@ namespace Compilers
 
             productions = simplifiedList;
         }
+
+        /**
+         * Inverse operations of Simplify
+         */
+        private void DisjoinProductions()
+        {
+            List<Production> separated = new List<Production>();
+
+            foreach(Production prod in productions)
+                foreach(var betaList in prod.Beta)
+                {
+                    separated.Add(new Production(prod.GetAlphaAsString(), prod.Alpha, betaList));
+                }
+
+            productions = separated;
+        }
         
         public void GenerateRegex(TextBox textBox)
         {
@@ -433,7 +449,10 @@ namespace Compilers
                 }
             }
         }
-
+        
+        /**
+         * Find item in Syntax Table by using nonTerminal(a) and terminal(b)
+         */
         public String GetSyntaxTableItem(string a, string b)
         {
             List<String> nTerm = GetNonTerminals().Split(' ').ToList();
@@ -490,8 +509,202 @@ namespace Compilers
             }
 
             // HACK
-            syntaxTable[2, 3] = "S' -> ε";
+            if(syntaxTable.Length > 1)
+                syntaxTable[2, 3] = "S' -> ε";
+        }
 
+        private List<KeyValuePair<string, Production>> ClosureLR1(List<KeyValuePair<string, Production>> setE)
+        {
+            for(var i = 0; i < setE.Count; i++)
+            {
+                var prod = setE[i].Value;
+                var id = setE.ElementAt(0).Key;
+
+                var alpha = prod.GetSymbolFromDot(-1);
+                var B = prod.GetSymbolFromDot(1);
+                var beta = prod.GetSymbolFromDot(2);
+                var list = new List<Symbol>();
+
+                if(beta.Coef != "")
+                    list.Add(beta);
+                list.Add(new Symbol(id));
+                var first = GetFirstOf(new Production(alpha.Coef, new List<Symbol>(), list));
+                var prods = GetProductions(B.Coef);
+
+                foreach (var f in first)
+                    foreach (var pro in prods)
+                        if (!LR1ContainsProduction(setE, f, pro))
+                            setE.Add(new KeyValuePair<string, Production>(f, pro.AddInitialDot()));
+            }
+
+            return setE;
+        }
+
+        /**
+         * Search for production in the given set
+         */
+        private Boolean LR1ContainsProduction(List<KeyValuePair<string, Production>> set, String key, Production prod)
+        {
+            foreach (var elem in set)
+                if (elem.Key == key && elem.Value.Equals(prod))
+                    return true;
+
+            return false;
+        }
+
+        /**
+         * Apply LR1 algorithm to create analyzer syntaxis table
+         */
+        public void LR1()
+        {
+            List<List<KeyValuePair<string, Production>>> states = new List<List<KeyValuePair<string, Production>>>();
+            DisjoinProductions();
+            Increase();
+
+            // Calculate first state
+            List<KeyValuePair<string, Production>> firstInfo = new List<KeyValuePair<string, Production>>();
+            productions[0].AddInitialDot();
+            firstInfo.Add(new KeyValuePair<string, Production>("$", productions[0]));
+            states.Add(ClosureLR1(firstInfo));
+
+            for(var i = 0; i < states.Count; i++)
+            {
+                var state = states[i];
+
+                foreach(Symbol symb in GetSymbols())
+                {
+                    var newState = GoTo(state.ToList(), symb);
+
+                    if (newState.Count > 0)
+                        if (!IsSetIn(states, newState))
+                            states.Add(newState);
+                }
+            }
+
+            MessageBox.Show(states.Count() + " estados");
+        }
+
+        /**
+         * User by LR1
+         */
+        private Boolean IsSetIn(List<List<KeyValuePair<string, Production>>> states, List<KeyValuePair<string, Production>> E)
+        {
+            Boolean isIn = false;
+
+            foreach (var state in states)
+            {
+                isIn = true;
+                foreach (var elem in E)
+                    if (!LR1ContainsProduction(state, elem.Key, elem.Value))
+                        isIn = false;
+
+                if (isIn && state.Count == E.Count)
+                    return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Calculate first of given production
+         */
+        public HashSet<String> GetFirstOf(Production p)
+        {
+            HashSet<String> first = new HashSet<String>();
+
+            if (p.IsLeftRecursive())
+                return first;
+
+            foreach (var s in p.Beta[0])
+            {
+                if (!s.IsTerminal())
+                {
+                    var prods = GetProductions(s.Coef); // Get productions where Alpha equals s
+                    var firstOfS = new HashSet<String>();
+
+                    foreach (var p2 in prods)
+                    {
+                        firstOfS.UnionWith(GetFirstOf(p2));
+                    }
+
+                    first.UnionWith(firstOfS.Where(symb => symb != "ε"));
+
+                    if (!firstOfS.Contains("ε")) // continue only when contains
+                        return first;
+                }
+                else
+                {
+                    first.Add(s.Coef);
+                    return first;
+                }
+            }
+
+            return first;
+        }
+
+        /**
+         * Get non terminals and terminals symbols in one single list
+         */
+        private List<Symbol> GetSymbols()
+        {
+            HashSet<string> keys = new HashSet<string>();
+            List<Symbol> symbols = new List<Symbol>();
+
+            foreach (var p in Productions)
+            {
+                foreach (var a in p.Alpha)
+                    if (!keys.Contains(a.Coef) && !a.Coef.Contains("'"))
+                    {
+                        keys.Add(a.Coef);
+                        symbols.Add(new Symbol(a.Coef));
+                    }
+            }
+
+            foreach (var p in Productions)
+            {
+                foreach (var list in p.Beta)
+                {
+                    foreach (Symbol s in list)
+                        if (!keys.Contains(s.Coef) && !s.IsDot())
+                        {
+                            keys.Add(s.Coef);
+                            symbols.Add(new Symbol(s.Coef));
+                        }
+                }
+            }
+
+            return symbols;
+        }
+
+        /**
+         * Method used by LR1
+         */
+        private List<KeyValuePair<string, Production>> GoTo(List<KeyValuePair<string, Production>> states, Symbol symbol)
+        {
+            List<KeyValuePair<string, Production>> J = new List<KeyValuePair<string, Production>>();
+            
+            foreach (var state in states)
+            {
+                Symbol symb = state.Value.GetSymbolFromDot(1);
+                if (symb != null && symb.Coef == symbol.Coef)
+                    J.Add(new KeyValuePair<string, Production>(state.Key, state.Value.GetShifted()));
+            }
+
+            return ClosureLR1(J);
+        }
+
+        /**
+         * Add initial production using initial symbol
+         * S' -> S
+         */
+        private void Increase()
+        {
+            Production ini = productions[0];
+            List<Symbol> alpha = new List<Symbol>();
+            List<Symbol> beta = new List<Symbol>(ini.Alpha);
+
+            alpha.Add(new Symbol(ini.GetAlphaAsString() + "'"));
+            productions.Insert(0, new Production(ini.GetAlphaAsString() + "'", alpha, beta));
         }
 
         /**
