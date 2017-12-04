@@ -199,16 +199,10 @@ namespace Compilers
          */
         public Production AddInitialDot()
         {
-            Boolean canInsert = true;
+            Production prod = new Production(name, new List<Symbol>(alpha), new List<Symbol>(beta[0]));
+            prod.beta[0].Insert(0, new Symbol('·'));
 
-            foreach (var symb in beta[0])
-                if (symb.Coef == "·")
-                    canInsert = false;
-
-            if(canInsert || true)
-                beta[0].Insert(0, new Symbol('·'));
-
-            return this;
+            return prod;
         }
 
         /**
@@ -220,7 +214,7 @@ namespace Compilers
             var index = IndexOfSymbol("·");
 
             if (index != -1 && index + offset < beta[0].Count && index + offset >= 0)
-                return new Symbol(beta[0][index + offset].Coef);
+                return beta[0][index + offset];
 
             return symb;
         }

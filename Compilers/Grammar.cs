@@ -22,6 +22,7 @@ namespace Compilers
         GrammarType type;
         String regex;
         String[,] syntaxTable;
+        List<List<KeyValuePair<string, Production>>> setsLR1;
 
         List<Symbol> posfixList;
         Stack<Symbol> stack;
@@ -31,6 +32,7 @@ namespace Compilers
         internal string Regex { get => regex; set => regex = value; }
         internal List<Symbol> PosfixList { get => posfixList; set => posfixList = value; }
         public string[,] SyntaxTable { get => syntaxTable; set => syntaxTable = value; }
+        internal List<List<KeyValuePair<string, Production>>> SetsLR1 { get => setsLR1; set => setsLR1 = value; }
 
         public Grammar()
         {
@@ -386,7 +388,6 @@ namespace Compilers
                 posfix += s.Coef;
             }
 
-
             return posfix;
         }
 
@@ -513,6 +514,97 @@ namespace Compilers
                 syntaxTable[2, 3] = "S' -> ε";
         }
 
+        public void GenerateSyntaxTableFromLR1()
+        {
+            List<Symbol> symbols = GetSymbols();
+            symbols.Add(new Symbol("$"));
+
+            syntaxTable = new String[setsLR1.Count + 1, symbols.Count + 1];
+
+            // Column headers
+            symbols.Reverse();
+            for (var i = 0; i < symbols.Count; i++)
+                syntaxTable[0, i+1] = symbols[i].Coef;
+
+            // First column
+            for(var j = 1; j <= setsLR1.Count; j++)
+                syntaxTable[j, 0] = (j-1).ToString();
+
+            for(var i = 0; i < setsLR1.Count; i++)
+            {
+                for (var j = 0; j < setsLR1[i].Count; j++)
+                {
+                    var a = setsLR1[i][j].Value.GetSymbolFromDot(1);
+                    var B = setsLR1[i][j].Value.GetSymbolFromDot(1);
+
+                    // SHIFT
+                    if (a.Coef != "" && a.IsTerminal())
+                    {
+                        var index = GetSetIndex(GoTo(setsLR1[i], a));
+                        var indexOf = Utils.IndexOfSymbol(symbols, a.Coef);
+
+                        if (index != -1)
+                            syntaxTable[i+1, indexOf+1] = "d" + index;
+                    }
+
+                    // REDUX
+                    if(B.Coef == "")
+                    {
+                        var indexOf = Utils.IndexOfSymbol(symbols, setsLR1[i][j].Key);
+
+                        for (int k = 0; k < productions.Count; k++)
+                        {
+                            var prod = productions[k];
+                            var beta = setsLR1[i][j].Value.Beta[0];
+
+                            if (Utils.CompareSymbolLists(beta.GetRange(0, beta.Count - 1), prod.Beta[0]))
+                                if (k != 0)
+                                    syntaxTable[i + 1, indexOf + 1] = "r" + k;
+                        }
+                    }
+
+                    // ACCEPT
+                    if (LR1ContainsProduction(setsLR1[i], "$", productions[0].GetShifted()))
+                    {
+                        var indexOf = Utils.IndexOfSymbol(symbols, "$");
+                        syntaxTable[i + 1, indexOf + 1] = "Accept";
+                    }
+                    
+                    // TRANSITIONS
+                    foreach (var nT in GetSymbols().Where(s => !s.IsTerminal()))
+                    {
+                        var index = GetSetIndex(GoTo(setsLR1[i], nT));
+                        var indexOf = Utils.IndexOfSymbol(symbols, nT.Coef);
+
+                        if (index != -1)
+                            syntaxTable[i + 1, indexOf + 1] = index.ToString();
+                    }
+                }
+            }
+        }
+
+        private int GetSetIndex(List<KeyValuePair<string, Production>> set)
+        {
+            int i = 0;
+
+            foreach(var s in setsLR1)
+            {
+                Boolean isIn = true;
+                foreach (var elem in set)
+                    if (!LR1ContainsProduction(s, elem.Key, elem.Value))
+                        isIn = false;
+
+                if (isIn && s.Count == set.Count)
+                    return i;
+                i++;
+            }
+
+            return -1;
+        }
+
+        /**
+         * Closure used by LR1
+         */
         private List<KeyValuePair<string, Production>> ClosureLR1(List<KeyValuePair<string, Production>> setE)
         {
             for(var i = 0; i < setE.Count; i++)
@@ -563,7 +655,7 @@ namespace Compilers
 
             // Calculate first state
             List<KeyValuePair<string, Production>> firstInfo = new List<KeyValuePair<string, Production>>();
-            productions[0].AddInitialDot();
+            productions[0] = productions[0].AddInitialDot();
             firstInfo.Add(new KeyValuePair<string, Production>("$", productions[0]));
             states.Add(ClosureLR1(firstInfo));
 
@@ -580,12 +672,12 @@ namespace Compilers
                             states.Add(newState);
                 }
             }
-
-            MessageBox.Show(states.Count() + " estados");
+            
+            setsLR1 = states;
         }
 
         /**
-         * User by LR1
+         * Used by LR1
          */
         private Boolean IsSetIn(List<List<KeyValuePair<string, Production>>> states, List<KeyValuePair<string, Production>> E)
         {

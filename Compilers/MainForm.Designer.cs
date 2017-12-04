@@ -71,6 +71,7 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.materialTabSelector = new MaterialSkin.Controls.MaterialTabSelector();
             this.btnTestLR1 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.listViewLR1Table = new MaterialSkin.Controls.MaterialListView();
             this.gpGrammar.SuspendLayout();
             this.gpResult.SuspendLayout();
             this.materialTabControl1.SuspendLayout();
@@ -533,6 +534,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.listViewLR1Table);
             this.tabPage4.Controls.Add(this.btnTestLR1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
@@ -558,15 +560,36 @@
             this.btnTestLR1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnTestLR1.Depth = 0;
             this.btnTestLR1.Icon = null;
-            this.btnTestLR1.Location = new System.Drawing.Point(327, 40);
+            this.btnTestLR1.Location = new System.Drawing.Point(9, 12);
             this.btnTestLR1.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnTestLR1.Name = "btnTestLR1";
             this.btnTestLR1.Primary = true;
-            this.btnTestLR1.Size = new System.Drawing.Size(54, 36);
+            this.btnTestLR1.Size = new System.Drawing.Size(97, 36);
             this.btnTestLR1.TabIndex = 5;
-            this.btnTestLR1.Text = "Test";
+            this.btnTestLR1.Text = "Calculate";
             this.btnTestLR1.UseVisualStyleBackColor = true;
             this.btnTestLR1.Click += new System.EventHandler(this.btnTestLR1_Click);
+            // 
+            // listViewLR1Table
+            // 
+            this.listViewLR1Table.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid;
+            this.listViewLR1Table.AutoArrange = false;
+            this.listViewLR1Table.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewLR1Table.Depth = 0;
+            this.listViewLR1Table.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
+            this.listViewLR1Table.FullRowSelect = true;
+            this.listViewLR1Table.GridLines = true;
+            this.listViewLR1Table.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listViewLR1Table.LabelWrap = false;
+            this.listViewLR1Table.Location = new System.Drawing.Point(9, 66);
+            this.listViewLR1Table.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.listViewLR1Table.MouseState = MaterialSkin.MouseState.OUT;
+            this.listViewLR1Table.Name = "listViewLR1Table";
+            this.listViewLR1Table.OwnerDraw = true;
+            this.listViewLR1Table.Size = new System.Drawing.Size(646, 227);
+            this.listViewLR1Table.TabIndex = 6;
+            this.listViewLR1Table.UseCompatibleStateImageBehavior = false;
+            this.listViewLR1Table.View = System.Windows.Forms.View.Details;
             // 
             // MainForm
             // 
@@ -648,6 +671,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TabPage tabPage4;
         private MaterialSkin.Controls.MaterialRaisedButton btnTestLR1;
+        private MaterialSkin.Controls.MaterialListView listViewLR1Table;
     }
 }
 

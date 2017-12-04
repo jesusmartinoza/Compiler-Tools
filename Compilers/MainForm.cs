@@ -162,6 +162,28 @@ namespace Compilers
             }
         }
 
+        private void FillLR1Table()
+        {
+            String[,] table = grammar.SyntaxTable;
+
+            // Create columns
+            listViewLR1Table.Columns.Add("States", 80);
+            for (int i = 1; i < table.GetLength(1); i++)
+                listViewLR1Table.Columns.Add(table[0, i]);
+
+            // Populate table
+            for (int i = 1; i < table.GetLength(0); i++)
+            {
+                String[] row = new String[table.GetLength(1)];
+
+                for (int j = 0; j < table.GetLength(1); j++)
+                    row[j] = table[i, j];
+
+                var listViewItem = new ListViewItem(row);
+                listViewLR1Table.Items.Add(listViewItem);
+            }
+        }
+
         private Boolean CalculateNextOf(Production p)
         {
             HashSet<String> next = new HashSet<String>();
@@ -387,6 +409,8 @@ namespace Compilers
         private void btnTestLR1_Click(object sender, EventArgs e)
         {
             grammar.LR1();
+            grammar.GenerateSyntaxTableFromLR1();
+            FillLR1Table();
         }
     }
 }
