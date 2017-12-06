@@ -169,7 +169,7 @@ namespace Compilers
             // Create columns
             listViewLR1Table.Columns.Add("States", 80);
             for (int i = 1; i < table.GetLength(1); i++)
-                listViewLR1Table.Columns.Add(table[0, i]);
+                listViewLR1Table.Columns.Add(table[0, i], 630/table.GetLength(1));
 
             // Populate table
             for (int i = 1; i < table.GetLength(0); i++)
@@ -354,10 +354,11 @@ namespace Compilers
             textBox1.Text = "";
             do
             {
-                var foo = "";
+                // Print stack
+                var str = "";
                 foreach (Symbol s in stack.Reverse())
-                    foo += s.Coef;
-                textBox1.Text += foo + "    " + test.Substring(strPtr);
+                    str += s.Coef;
+                textBox1.Text += str + "    " + test.Substring(strPtr);
 
                 Symbol top = stack.Peek();
                 char testChar = test[strPtr];
@@ -406,11 +407,90 @@ namespace Compilers
                 MessageBox.Show("Syntactically valid string!!");
         }
 
-        private void btnTestLR1_Click(object sender, EventArgs e)
+        private void btnCalculateLR1_Click(object sender, EventArgs e)
         {
+            OnBtnProductions_Click(sender, e);
             grammar.LR1();
             grammar.GenerateSyntaxTableFromLR1();
             FillLR1Table();
+        }
+
+        private void btnTestLR1_Click(object sender, EventArgs e)
+        {
+            btnCalculateLR1_Click(sender, e);
+            if (grammar.SyntaxTable.Length == 0)
+            {
+                MessageBox.Show("You must need to calculate LR1 syntaxis table");
+                return;
+            }
+
+            String test = textBoxTestString.Text + "$";
+            Stack<string> stack = new Stack<string>();
+            int strPtr = 0;
+            Boolean errorFound = false;
+            Boolean finish = false;
+
+            stack.Push("0");
+            textBox1.Text = "";
+            do
+            {
+                // Print stack
+                var str = "";
+                foreach (var s in stack.Reverse())
+                    str += s;
+                textBox1.Text += str + "    " + test.Substring(strPtr);
+
+                var top = stack.Peek();
+                var ae = test[strPtr];
+                var action = grammar.GetLR1SyntaxTableItem(top, ae.ToString());
+
+                if (action == null)
+                {
+                    MessageBox.Show("Invalid string using LR1");
+                    return;
+                }
+
+                if (action[0] == 'd')
+                {
+                    stack.Push(ae.ToString());
+                    // Insert number in stack
+                    stack.Push(action.Substring(1));
+
+                    strPtr++;
+                    textBox1.Text += "\t Shift(" + action.Substring(1) + ")";
+                } else
+                {
+                    if(action[0] == 'r')
+                    {
+                        // Get production in position action[1] ignoring S' symbol
+                        Production prod = grammar.Productions[int.Parse(action[1].ToString())];
+                        int n = 2 * prod.Beta[0].Count;
+
+                        for (int i = 0; i < n; i++)
+                            stack.Pop();
+
+                        string sPrim = stack.Peek();
+                        string alpha = prod.GetAlphaAsString();
+                        stack.Push(alpha);
+                        stack.Push(grammar.GetLR1SyntaxTableItem(sPrim, alpha.ToString()));
+                        textBox1.Text += "\t" + prod.ToString();
+                        textBox1.Text += "\t Redux(" + action.Substring(1) + ")";
+                    } else
+                    {
+                        if (action == "Accept")
+                            finish = true;
+                        else
+                        {
+                            MessageBox.Show("Unkown symbol in string");
+                            return;
+                        }
+                    }
+                }
+                textBox1.Text += "\r\n";
+            } while (stack.Peek() != "$" && !errorFound && !finish);
+
+            if (!errorFound)
+                MessageBox.Show("Syntactically valid string!!");
         }
     }
 }

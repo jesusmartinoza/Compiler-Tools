@@ -63,15 +63,16 @@
             this.listViewFirst = new MaterialSkin.Controls.MaterialListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.listViewLR1Table = new MaterialSkin.Controls.MaterialListView();
+            this.btnCalculateLR1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.btnTestLR1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnTestFirstNext = new MaterialSkin.Controls.MaterialRaisedButton();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxTestString = new System.Windows.Forms.TextBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.materialTabSelector = new MaterialSkin.Controls.MaterialTabSelector();
-            this.btnTestLR1 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.listViewLR1Table = new MaterialSkin.Controls.MaterialListView();
             this.gpGrammar.SuspendLayout();
             this.gpResult.SuspendLayout();
             this.materialTabControl1.SuspendLayout();
@@ -84,8 +85,8 @@
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.tabPage6.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbGrammar
@@ -224,8 +225,8 @@
             this.materialTabControl1.Controls.Add(this.tabPage2);
             this.materialTabControl1.Controls.Add(this.tabPage3);
             this.materialTabControl1.Controls.Add(this.tabPage5);
-            this.materialTabControl1.Controls.Add(this.tabPage6);
             this.materialTabControl1.Controls.Add(this.tabPage4);
+            this.materialTabControl1.Controls.Add(this.tabPage6);
             this.materialTabControl1.Depth = 0;
             this.materialTabControl1.Location = new System.Drawing.Point(-1, 101);
             this.materialTabControl1.MouseState = MaterialSkin.MouseState.HOVER;
@@ -476,99 +477,16 @@
             this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader2.Width = 80;
             // 
-            // tabPage6
-            // 
-            this.tabPage6.Controls.Add(this.textBox1);
-            this.tabPage6.Controls.Add(this.btnTestFirstNext);
-            this.tabPage6.Controls.Add(this.label1);
-            this.tabPage6.Controls.Add(this.textBoxTestString);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(666, 302);
-            this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "Syntaxis Analyzer";
-            this.tabPage6.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(152, 104);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(344, 189);
-            this.textBox1.TabIndex = 5;
-            // 
-            // btnTestFirstNext
-            // 
-            this.btnTestFirstNext.AutoSize = true;
-            this.btnTestFirstNext.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnTestFirstNext.Depth = 0;
-            this.btnTestFirstNext.Icon = null;
-            this.btnTestFirstNext.Location = new System.Drawing.Point(241, 62);
-            this.btnTestFirstNext.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnTestFirstNext.Name = "btnTestFirstNext";
-            this.btnTestFirstNext.Primary = true;
-            this.btnTestFirstNext.Size = new System.Drawing.Size(177, 36);
-            this.btnTestFirstNext.TabIndex = 4;
-            this.btnTestFirstNext.Text = "Test using First/Next";
-            this.btnTestFirstNext.UseVisualStyleBackColor = true;
-            this.btnTestFirstNext.Click += new System.EventHandler(this.btnTestFirstNext_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(295, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "String to test";
-            // 
-            // textBoxTestString
-            // 
-            this.textBoxTestString.Location = new System.Drawing.Point(224, 36);
-            this.textBoxTestString.Name = "textBoxTestString";
-            this.textBoxTestString.Size = new System.Drawing.Size(213, 20);
-            this.textBoxTestString.TabIndex = 0;
-            this.textBoxTestString.Text = "x(x.(x.))";
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.listViewLR1Table);
-            this.tabPage4.Controls.Add(this.btnTestLR1);
+            this.tabPage4.Controls.Add(this.btnCalculateLR1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(666, 302);
             this.tabPage4.TabIndex = 6;
-            this.tabPage4.Text = "LR(1)";
+            this.tabPage4.Text = "LR1";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // materialTabSelector
-            // 
-            this.materialTabSelector.BaseTabControl = this.materialTabControl1;
-            this.materialTabSelector.Depth = 0;
-            this.materialTabSelector.Location = new System.Drawing.Point(0, 62);
-            this.materialTabSelector.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialTabSelector.Name = "materialTabSelector";
-            this.materialTabSelector.Size = new System.Drawing.Size(673, 37);
-            this.materialTabSelector.TabIndex = 5;
-            this.materialTabSelector.Text = "materialTabSelector1";
-            // 
-            // btnTestLR1
-            // 
-            this.btnTestLR1.AutoSize = true;
-            this.btnTestLR1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnTestLR1.Depth = 0;
-            this.btnTestLR1.Icon = null;
-            this.btnTestLR1.Location = new System.Drawing.Point(9, 12);
-            this.btnTestLR1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnTestLR1.Name = "btnTestLR1";
-            this.btnTestLR1.Primary = true;
-            this.btnTestLR1.Size = new System.Drawing.Size(97, 36);
-            this.btnTestLR1.TabIndex = 5;
-            this.btnTestLR1.Text = "Calculate";
-            this.btnTestLR1.UseVisualStyleBackColor = true;
-            this.btnTestLR1.Click += new System.EventHandler(this.btnTestLR1_Click);
             // 
             // listViewLR1Table
             // 
@@ -581,15 +499,115 @@
             this.listViewLR1Table.GridLines = true;
             this.listViewLR1Table.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewLR1Table.LabelWrap = false;
-            this.listViewLR1Table.Location = new System.Drawing.Point(9, 66);
+            this.listViewLR1Table.Location = new System.Drawing.Point(9, 15);
             this.listViewLR1Table.MouseLocation = new System.Drawing.Point(-1, -1);
             this.listViewLR1Table.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewLR1Table.Name = "listViewLR1Table";
             this.listViewLR1Table.OwnerDraw = true;
-            this.listViewLR1Table.Size = new System.Drawing.Size(646, 227);
+            this.listViewLR1Table.Size = new System.Drawing.Size(646, 249);
             this.listViewLR1Table.TabIndex = 6;
             this.listViewLR1Table.UseCompatibleStateImageBehavior = false;
             this.listViewLR1Table.View = System.Windows.Forms.View.Details;
+            // 
+            // btnCalculateLR1
+            // 
+            this.btnCalculateLR1.AutoSize = true;
+            this.btnCalculateLR1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnCalculateLR1.Depth = 0;
+            this.btnCalculateLR1.Icon = null;
+            this.btnCalculateLR1.Location = new System.Drawing.Point(286, 279);
+            this.btnCalculateLR1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnCalculateLR1.Name = "btnCalculateLR1";
+            this.btnCalculateLR1.Primary = true;
+            this.btnCalculateLR1.Size = new System.Drawing.Size(97, 36);
+            this.btnCalculateLR1.TabIndex = 5;
+            this.btnCalculateLR1.Text = "Calculate";
+            this.btnCalculateLR1.UseVisualStyleBackColor = true;
+            this.btnCalculateLR1.Click += new System.EventHandler(this.btnCalculateLR1_Click);
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.btnTestLR1);
+            this.tabPage6.Controls.Add(this.textBox1);
+            this.tabPage6.Controls.Add(this.btnTestFirstNext);
+            this.tabPage6.Controls.Add(this.label1);
+            this.tabPage6.Controls.Add(this.textBoxTestString);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(666, 302);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Syntaxis Analyzer";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // btnTestLR1
+            // 
+            this.btnTestLR1.AutoSize = true;
+            this.btnTestLR1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnTestLR1.Depth = 0;
+            this.btnTestLR1.Icon = null;
+            this.btnTestLR1.Location = new System.Drawing.Point(66, 124);
+            this.btnTestLR1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnTestLR1.Name = "btnTestLR1";
+            this.btnTestLR1.Primary = true;
+            this.btnTestLR1.Size = new System.Drawing.Size(125, 36);
+            this.btnTestLR1.TabIndex = 6;
+            this.btnTestLR1.Text = "Test using LR1";
+            this.btnTestLR1.UseVisualStyleBackColor = true;
+            this.btnTestLR1.Click += new System.EventHandler(this.btnTestLR1_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(299, 23);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(344, 267);
+            this.textBox1.TabIndex = 5;
+            // 
+            // btnTestFirstNext
+            // 
+            this.btnTestFirstNext.AutoSize = true;
+            this.btnTestFirstNext.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnTestFirstNext.Depth = 0;
+            this.btnTestFirstNext.Icon = null;
+            this.btnTestFirstNext.Location = new System.Drawing.Point(43, 82);
+            this.btnTestFirstNext.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnTestFirstNext.Name = "btnTestFirstNext";
+            this.btnTestFirstNext.Primary = true;
+            this.btnTestFirstNext.Size = new System.Drawing.Size(177, 36);
+            this.btnTestFirstNext.TabIndex = 4;
+            this.btnTestFirstNext.Text = "Test using First/Next";
+            this.btnTestFirstNext.UseVisualStyleBackColor = true;
+            this.btnTestFirstNext.Click += new System.EventHandler(this.btnTestFirstNext_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(93, 26);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(66, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "String to test";
+            // 
+            // textBoxTestString
+            // 
+            this.textBoxTestString.Location = new System.Drawing.Point(22, 42);
+            this.textBoxTestString.Name = "textBoxTestString";
+            this.textBoxTestString.Size = new System.Drawing.Size(213, 20);
+            this.textBoxTestString.TabIndex = 0;
+            this.textBoxTestString.Text = "*i=i";
+            // 
+            // materialTabSelector
+            // 
+            this.materialTabSelector.BaseTabControl = this.materialTabControl1;
+            this.materialTabSelector.Depth = 0;
+            this.materialTabSelector.Location = new System.Drawing.Point(0, 62);
+            this.materialTabSelector.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialTabSelector.Name = "materialTabSelector";
+            this.materialTabSelector.Size = new System.Drawing.Size(673, 37);
+            this.materialTabSelector.TabIndex = 5;
+            this.materialTabSelector.Text = "materialTabSelector1";
             // 
             // MainForm
             // 
@@ -619,10 +637,10 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -670,8 +688,9 @@
         private System.Windows.Forms.TextBox textBoxTestString;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TabPage tabPage4;
-        private MaterialSkin.Controls.MaterialRaisedButton btnTestLR1;
+        private MaterialSkin.Controls.MaterialRaisedButton btnCalculateLR1;
         private MaterialSkin.Controls.MaterialListView listViewLR1Table;
+        private MaterialSkin.Controls.MaterialRaisedButton btnTestLR1;
     }
 }
 

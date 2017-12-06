@@ -468,6 +468,24 @@ namespace Compilers
         }
 
         /**
+         * Find item in Syntax Table by using state number and symbol
+         */
+        public String GetLR1SyntaxTableItem(string state, string symbol)
+        {
+            List<Symbol> symbols = GetSymbols();
+            int index = -1;
+
+            symbols.Add(new Symbol("$"));
+            symbols.Reverse();
+            for (int i = 0; i < symbols.Count; i++)
+                if (symbols[i].Coef == symbol)
+                    index = i;
+
+            var a = syntaxTable[int.Parse(state.ToString()) + 1, index + 1];
+            return a;
+        }
+
+        /**
          * Generate syntax table based on First and Next sets
          */
         public void GeneratesSyntaxTableFromFirstNext()
